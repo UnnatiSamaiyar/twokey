@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { supabase } from "../supabaseClient";
+import { supabase } from "../helper/supabaseClient";
 import axios from "axios";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
@@ -90,21 +90,24 @@ const Login = ({ setToken }) => {
     orgData();
   }, []);
   return (
-    <div className="flex flex-row">
-      <div className="w-1/2 ">
+    <div className="flex flex-col md:flex-row">
+      <div className="w-full md:w-1/2 ">
         <img
-          className="h-screen w-11/12"
+          className="h-screen w-screen"
           src={twokeyLanding}
           alt="twokeyLandingImage"
         />
       </div>
 
-      <div className="bg-white w-1/2 ">
+      <div className="bg-white flex flex-col justify-center items-center w-full md:w-1/2">
         <h1 className="text-5xl text-center mt-4 font-semibold ">
           Welcome to Twokey
         </h1>
 
-        <form onSubmit={handleSubmit} className="p-8 text-center w-11/12">
+        <form
+          onSubmit={handleSubmit}
+          className="p-4 text-center w-full md:w-11/12"
+        >
           <span className="my-4 flex flex-col justify-center ">
             <InputLabel
               className="text-md text-left mb-2 mt-4"
@@ -138,42 +141,24 @@ const Login = ({ setToken }) => {
                 Email
               </InputLabel>
               <span id="email" className="flex flex-row gap-2">
-                {/* <h3 className="text-lg text-left mb-2 mt-4">Email</h3> */}
-
                 <TextField
                   id="outlined-basic-email"
                   variant="outlined"
-                  className="w-3/5 bg-gray-100"
+                  className="w-full bg-gray-100"
                   placeholder="Enter your Email here"
                   name="email"
                   onChange={handleChange}
                   size="small"
                 />
-
-                {/* <TextField
-                  id="outlined-basic-email"
-                  variant="outlined"
-                  className="w-2/5 bg-gray-100"
-                  placeholder="Enter your Email here"
-                  name="email"
-                  onChange={handleChange}
-                  size="small"
-                /> */}
-
-                <Typography
-                  variant="p"
-                  component="h2"
-                  className="w-2/5 bg-gray-100 border border-gray-400 rounded p-2 text-gray-400"
-                >
-                  @twokey.co.in
-                </Typography>
               </span>
             </div>
 
-            <h3 className="text-lg text-left mt-4 mb-2 mt-4">Password</h3>
+            <InputLabel className="text-md text-left mb-2 mt-4" id="password">
+              Password
+            </InputLabel>
 
             <TextField
-              id="outlined-basic-password"
+              id="password"
               variant="outlined"
               placeholder="Enter your Password"
               className="w-full bg-gray-100"
@@ -186,11 +171,11 @@ const Login = ({ setToken }) => {
 
           <button
             type="submit"
-            className="bg-blue-600 text-white py-1 px-10 text-center mx-32 mt-16 rounded-sm mr-24"
+            className="bg-blue-600 text-white py-1 px-10 text-center mt-16 rounded-sm"
           >
             Sign In
           </button>
-          <p className="text-gray-500 mt-4 text-center mx-24">
+          <p className="text-gray-500 mt-4 text-center">
             Don't have an account?{" "}
             <Link to="/signup" className="text-indigo-600 font-semibold">
               Sign Up

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { supabase } from "../supabaseClient";
+import { supabase } from "../helper/supabaseClient";
 import { TextField } from "@mui/material";
 import axios from "axios";
 
@@ -45,7 +45,7 @@ const SignUp = () => {
     e.preventDefault();
 
     try {
-      const { data, error } = await supabase?.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
         options: {
@@ -75,21 +75,24 @@ const SignUp = () => {
   }, []);
 
   return (
-    <div className="flex flex-row h-auto">
-      <div className="w-1/2 ">
+    <div className="flex flex-col md:flex-row">
+      <div className="w-full md:w-1/2">
         <img
-          className="h-screen w-11/12"
+          className="h-screen w-screen"
           src={twokeyLanding}
           alt="twokeyLandingImage"
         />
       </div>
 
-      <div className="bg-white w-1/2 ">
+      <div className="bg-white flex flex-col justify-center items-center w-full md:w-1/2">
         <h1 className="text-5xl text-center mt-8 font-semibold ">
           Welcome to Twokey
         </h1>
 
-        <form onSubmit={handleSubmit} className="p-8  text-center w-11/12">
+        <form
+          onSubmit={handleSubmit}
+          className="p-4 text-center w-full md:w-11/12"
+        >
           <span className="my-4 flex flex-col justify-center ">
             <InputLabel
               className="text-md text-left mb-2 mt-4"
@@ -119,10 +122,12 @@ const SignUp = () => {
                 ))}
             </Select>
 
-            <h3 className="text-md text-left mb-2 mt-4">Full Name</h3>
+            <InputLabel className="text-md text-left mb-2 mt-4" id="fullname">
+              Full Name
+            </InputLabel>
 
             <TextField
-              id="outlined-basic-email"
+              id="fullname"
               variant="outlined"
               className="w-full bg-gray-100"
               placeholder="John Doe"
@@ -130,18 +135,6 @@ const SignUp = () => {
               onChange={handleChange}
               size="small"
             />
-
-            {/* <h3 className="text-md text-left mb-2 mt-4">Email</h3>
-
-            <TextField
-              id="outlined-basic-email"
-              variant="outlined"
-              className="w-4/5 bg-gray-100"
-              placeholder="Enter your Email here"
-              name="email"
-              onChange={handleChange}
-              size="small"
-            /> */}
 
             <div className="w-full">
               <InputLabel className="text-md text-left mb-2 mt-4" id="email">
@@ -153,37 +146,21 @@ const SignUp = () => {
                 <TextField
                   id="outlined-basic-email"
                   variant="outlined"
-                  className="w-3/5 bg-gray-100"
+                  className="w-full bg-gray-100"
                   placeholder="Enter your Email here"
                   name="email"
                   onChange={handleChange}
                   size="small"
                 />
-
-                {/* <TextField
-                  id="outlined-basic-email"
-                  variant="outlined"
-                  className="w-2/5 bg-gray-100"
-                  placeholder="Enter your Email here"
-                  name="email"
-                  onChange={handleChange}
-                  size="small"
-                /> */}
-
-                <Typography
-                  variant="p"
-                  component="h2"
-                  className="w-2/5 bg-gray-100 border border-gray-400 rounded p-2 text-gray-400"
-                >
-                  @twokey.co.in
-                </Typography>
               </span>
             </div>
 
-            <h3 className="text-md text-left mb-2 mt-4">Password</h3>
+            <InputLabel className="text-md text-left mb-2 mt-4" id="Password">
+              Password
+            </InputLabel>
 
             <TextField
-              id="outlined-basic-password"
+              id="password"
               variant="outlined"
               placeholder="Enter your Password"
               className="w-full bg-gray-100"
@@ -196,11 +173,11 @@ const SignUp = () => {
 
           <button
             type="submit"
-            className="bg-blue-600 text-white py-1 px-10 text-center mx-32 mt-8 rounded-sm mr-32"
+            className="bg-blue-600 text-white py-1 px-10 text-center mt-8 rounded-sm"
           >
             Sign Up
           </button>
-          <p className="text-gray-500 mt-4 text-center mx-24">
+          <p className="text-gray-500 mt-4 text-center">
             Already have an account?{" "}
             <Link to="/" className="text-indigo-600 font-semibold">
               Log in
