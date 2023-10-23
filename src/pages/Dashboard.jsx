@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const Home = ({ token }) => {
+const Dashboard = ({ token }) => {
   let navigate = useNavigate();
 
   function handleLogout() {
@@ -21,8 +21,11 @@ const Home = ({ token }) => {
       >
         Logout
       </button>
+      <a href="/account" alt="account">
+        account
+      </a>
     </div>
   );
 };
 
-export default Home;
+export default Dashboard;

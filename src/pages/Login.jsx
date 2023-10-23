@@ -72,7 +72,7 @@ const Login = ({ setToken }) => {
       // }
 
       setToken(data);
-      navigate("/home");
+      navigate("/dashboard");
     } catch (error) {
       alert(error.message);
     }
