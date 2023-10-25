@@ -1,64 +1,15 @@
-// import React, { useState, useEffect } from "react";
-// import SignUp from "./pages/SignUp";
-// import Login from "./pages/Login";
-// import Dashboard from "./pages/Dashboard";
-// import Account from "./pages/Account";
-// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
-// const App = () => {
-//   const [token, setToken] = useState(false);
-
-//   if (token) {
-//     sessionStorage.setItem("token", JSON.stringify(token));
-//   }
-
-//   useEffect(() => {
-//     if (sessionStorage.getItem("token")) {
-//       let data = JSON.parse(sessionStorage.getItem("token"));
-//       setToken(data);
-//     }
-//   }, []);
-
-//   return (
-//     <div>
-//       <Router>
-//         <Routes>
-//           {token ? (
-//             <>
-//               <Route
-//                 path={"/dashboard"}
-//                 element={<Dashboard token={token} />}
-//               />
-//               <Route path={"/account"} element={<Account token={token} />} />
-//             </>
-//           ) : (
-//             <>
-//               <Route path={"/signup"} element={<SignUp />} />
-//               <Route path={"/"} element={<Login setToken={setToken} />} />
-//             </>
-//           )}
-//         </Routes>
-//       </Router>
-//     </div>
-//   );
-// };
-
-// export default App;
-
 import React, { useState, useEffect } from "react";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Account from "./pages/Account";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import ProtectedRoutes from "./utils/PrivateRoutes";
+import SideBar from "./components/SideBar";
+import TopBar from "./components/TopBar";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const App = () => {
-  const [token, setToken] = useState(false);
+  const [token, setToken] = useState("");
 
   if (token) {
     sessionStorage.setItem("token", JSON.stringify(token));
@@ -68,34 +19,29 @@ const App = () => {
     if (sessionStorage.getItem("token")) {
       let data = JSON.parse(sessionStorage.getItem("token"));
       setToken(data);
+      // console.log(
+      //   "app.js local storage",
+      //   window.localStorage.getItem("sb-dxqrkmzagreeiyncplzx-auth-token")
+      // );
     }
   }, []);
 
   return (
-    <div>
-      <Router>
-        <Routes>
-          {token ? (
-            <>
-              <Route
-                path={"/dashboard"}
-                element={<Dashboard token={token} />}
-              />
-              <Route path={"/account"} element={<Account token={token} />} />
-              <Route path={"/signup"} element={<Navigate to="/dashboard" />} />
-              <Route path={"/"} element={<Navigate to="/dashboard" />} />
-            </>
-          ) : (
-            <>
-              <Route path={"/signup"} element={<SignUp />} />
-              <Route path={"/"} element={<Login setToken={setToken} />} />
-            </>
-          )}
+    <Router>
+      <div className="flex ">
+        <SideBar />
+        <div className="flex flex-col w-full">
+          <TopBar />
+          <Routes>
+            <Route path={"/dashboard"} element={<Dashboard />} />
+            <Route path={"/account"} element={<Account />} />
 
-          <Route path={"*"} element={<>Route Not Found !</>} />
-        </Routes>
-      </Router>
-    </div>
+            <Route path={"/signup"} element={<SignUp />} />
+            <Route path={"/"} element={<Login />} exact />
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
 };
 

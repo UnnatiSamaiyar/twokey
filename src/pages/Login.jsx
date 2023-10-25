@@ -18,7 +18,7 @@ import twokeyLanding from "../assets/twokeyLanding.png";
 //   process.env.SUPABASE_ANON_KEY
 // );
 
-const Login = ({ setToken }) => {
+const Login = () => {
   let navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -59,19 +59,10 @@ const Login = ({ setToken }) => {
 
       if (error) throw error;
 
-      // Check if the user's organization matches the provided organization
-      // const user = await supabase
-      //   .from("user_table_name") // Replace with the actual table name
-      //   .select("organization")
-      //   .eq("email", formData.email)
-      //   .single();
-
-      // if (!user || user.organization !== formData.organization) {
-      //   alert("User does not belong to this organization.");
-      //   return;
-      // }
-
-      setToken(data);
+      // setToken(data);
+      if (data) {
+        sessionStorage.setItem("token", JSON.stringify(data));
+      }
       navigate("/dashboard");
     } catch (error) {
       alert(error.message);
