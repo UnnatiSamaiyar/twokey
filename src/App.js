@@ -10,16 +10,24 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const App = () => {
   const [token, setToken] = useState("");
+  const [localData, setLocalData] = useState("");
   const [screenshotDetected, setScreenshotDetected] = useState(false);
 
   if (token) {
     sessionStorage.setItem("token", JSON.stringify(token));
+    localStorage.setItem("user", JSON.stringify(token.user));
   }
 
   useEffect(() => {
+    // Retrieve the token from sessionStorage and set it in state
     let data = JSON.parse(sessionStorage.getItem("token"));
     setToken(data);
-    console.log("token : ", data);
+    // console.log("token (from sessionStorage):", data);
+
+    // Retrieve the token from localStorage and set it in state
+    let localUserData = JSON.parse(localStorage.getItem("user"));
+    setLocalData(localUserData);
+    // console.log("user (from localStorage):", localUserData);
   }, []);
 
   // Prevent right-click context menu
@@ -48,48 +56,6 @@ const App = () => {
     };
   }, []);
 
-  // Prevent Screenshot
-  // useEffect(() => {
-  //   const preventPrintScreen = (e) => {
-  //     try {
-  //       const forbiddenKeys = [
-  //         "PrintScreen",
-  //         "Snapshot",
-  //         "PrtSc",
-  //         "Meta",
-  //         "Escape",
-  //         "PrtSc",
-  //         "Control",
-  //         "Alt",
-  //         "Shift",
-  //         "Insert",
-  //       ];
-  //       if (forbiddenKeys.includes(e.key)) {
-  //         e.preventDefault();
-  //         setScreenshotDetected(true);
-  //         console.log(token.user.email, " took the ScreenShot.");
-
-  //         // Remove the blur class after 2 seconds
-  //         setTimeout(() => {
-  //           setScreenshotDetected(false);
-  //         }, 2000);
-  //       }
-  //     } catch (error) {
-  //       console.error(
-  //         "An error occurred while preventing Print Screen:",
-  //         error
-  //       );
-  //     }
-  //   };
-
-  //   document.addEventListener("keydown", preventPrintScreen);
-
-  //   return () => {
-  //     document.removeEventListener("keydown", preventPrintScreen);
-  //   };
-  // }, []);
-
-  // Prevent Screenshot
   useEffect(() => {
     const preventPrintScreen = (e) => {
       try {
@@ -107,9 +73,13 @@ const App = () => {
         ];
         if (forbiddenKeys.includes(e.key)) {
           e.preventDefault();
-          if (token && token.user.email) {
-            console.log(token.user.email, " took the ScreenShot.");
-          }
+
+          console.log(
+            "Heheheheheheheheheheeh",
+            localData.email,
+            " took the ScreenShot."
+          );
+
           setScreenshotDetected(true);
 
           // Remove the blur class after 2 seconds
