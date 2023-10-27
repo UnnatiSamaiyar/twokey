@@ -9,6 +9,9 @@ const RecentFiles = () => {
     async function fetchRecentFiles() {
       try {
         let token = JSON.parse(sessionStorage.getItem("token"));
+
+        // console.log("token in recent files 1 :", token.session.access_token);
+
         const recentFilesFromBackend = await axios.get(
           "https://twokeybackend.onrender.com/file/files/",
           {
@@ -17,6 +20,8 @@ const RecentFiles = () => {
             },
           }
         );
+
+        // console.log("token in recent files 2 :", token.session.access_token);
 
         const mappedFiles = recentFilesFromBackend.data
           .slice(0, 6) // Get the first 6 files

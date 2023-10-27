@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ProfilePic from "../assets/profilePic.png";
+import { useDarkMode } from "../context/darkModeContext";
 
 function SideBar() {
   const location = useLocation();
   const [data, setData] = useState("");
+  const { darkMode } = useDarkMode();
   let navigate = useNavigate();
 
   function handleLogout() {
@@ -20,7 +22,6 @@ function SideBar() {
     }
   }, []);
 
-  // Check if the path is either "/" or "/signup"
   const hideSideBar =
     location.pathname === "/" || location.pathname === "/signup";
 
@@ -37,29 +38,162 @@ function SideBar() {
     { name: "Human Resources", path: "/humanresources" },
   ];
 
+  // return (
+  //   <nav
+  //     className={`h-screen flex flex-col justify-between w-1/6 p-4 bg-gray-50 border border-b-0 border-r-2 border-r-gray-200 ${
+  //       darkMode ? "bg-gray-800" : "bg-white"
+  //     }`}
+  //   >
+  //     <div>
+  //       <a
+  //         href="/dashboard"
+  //         alt="LOGO"
+  //         className={`text-2xl ${darkMode ? "text-gray-300" : "text-gray-500"}`}
+  //       >
+  //         Twokey
+  //       </a>
+  //       <ul className={`${darkMode ? "text-white" : "text-gray-800"}`}>
+  //         <p
+  //           className={`text-xs text-gray-600 mt-4 mb-2 p-2 ${
+  //             darkMode ? "text-gray-100" : ""
+  //           }`}
+  //         >
+  //           Overview
+  //         </p>
+  //         <li className=" ">
+  //           <a
+  //             href="/dashboard"
+  //             alt="dashboard"
+  //             className={
+  //               location.pathname === "/dashboard"
+  //                 ? "hover:bg-gray-100 py-1.5 px-4 rounded-md bg-gray-200 text-sm"
+  //                 : "hover:bg-gray-100 py-1.5 px-4 rounded-md text-sm"
+  //             }
+  //           >
+  //             Dashboard
+  //           </a>
+  //         </li>
+
+  //         <p
+  //           className={`text-xs text-gray-600 mt-4  p-2 ${
+  //             darkMode ? "text-gray-100" : ""
+  //           }`}
+  //         >
+  //           Department
+  //         </p>
+
+  //         {departments.map((department, index) => (
+  //           <li key={index} className="mb-4">
+  //             <a
+  //               href={department.path}
+  //               alt={department.name}
+  //               className={
+  //                 location.pathname === department.path
+  //                   ? "hover:bg-gray-100 py-1.5 px-4 rounded-md bg-gray-200 text-sm"
+  //                   : "hover:bg-gray-100 py-1.5 px-4 rounded-md text-sm"
+  //               }
+  //             >
+  //               {department.name}
+  //             </a>
+  //           </li>
+  //         ))}
+
+  //         <p
+  //           className={`text-xs text-gray-600 mt-4 mb-2 p-2 ${
+  //             darkMode ? "text-gray-100" : ""
+  //           }`}
+  //         >
+  //           Settings
+  //         </p>
+  //         <li className=" ">
+  //           <a
+  //             href="/settings"
+  //             alt="settings"
+  //             className={
+  //               location.pathname === "/settings"
+  //                 ? "hover:bg-gray-100 py-1.5 px-4 rounded-md bg-gray-200 text-sm"
+  //                 : "hover:bg-gray-100 py-1.5 px-4 rounded-md text-sm"
+  //             }
+  //           >
+  //             Settings
+  //           </a>
+  //         </li>
+
+  //         <li className=" mt-2">
+  //           <button
+  //             onClick={handleLogout}
+  //             className={
+  //               location.pathname === "/settings"
+  //                 ? "hover-bg-gray-100 py-1.5 px-4 rounded-md bg-gray-200 text-sm"
+  //                 : "hover-bg-gray-100 py-1.5 px-4 rounded-md text-sm"
+  //             }
+  //           >
+  //             LogOut
+  //           </button>
+  //         </li>
+  //       </ul>
+  //     </div>
+  //     <div>
+  //       {data && (
+  //         <span className="flex gap-2 items-center">
+  //           <img
+  //             src={ProfilePic}
+  //             alt="ProfilePic"
+  //             className="w-6 h-6 rounded-full"
+  //           />
+  //           <p className={`${darkMode ? "text-gray-300" : ""}`}>#{data}</p>
+  //         </span>
+  //       )}
+  //     </div>
+  //   </nav>
+  // );
+
   return (
-    <nav className="h-auto flex flex-col justify-between w-1/6 p-4 bg-gray-50 border border-b-0 border-r-2 border-r-gray-200">
+    <nav
+      className={`h-screen flex flex-col justify-between w-1/6 p-4 bg-gray-50 border border-b-0 border-r-2 border-r-gray-200 ${
+        darkMode ? "bg-gray-800" : "bg-white"
+      }`}
+    >
       <div>
-        <a href="/dashboard" alt="LOGO" className="text-2xl text-gray-500 ">
+        <a
+          href="/dashboard"
+          alt="LOGO"
+          className={`text-2xl ${darkMode ? "text-gray-300" : "text-gray-500"}`}
+        >
           Twokey
         </a>
-        <ul className=" text-gray-800 ">
-          <p className="text-xs text-gray-600 mt-4 mb-2 p-2">Overview</p>
+        <ul className={`${darkMode ? "text-white" : "text-gray-800"}`}>
+          <p
+            className={`text-xs text-gray-600 mt-4 mb-2 p-2 ${
+              darkMode ? "text-gray-100" : ""
+            }`}
+          >
+            Overview
+          </p>
           <li className=" ">
             <a
               href="/dashboard"
               alt="dashboard"
               className={
                 location.pathname === "/dashboard"
-                  ? "hover:bg-gray-100 py-1.5 px-4 rounded-md bg-gray-200 text-sm"
-                  : "hover:bg-gray-100 py-1.5 px-4 rounded-md text-sm"
+                  ? `hover:bg-gray-100 py-1.5 px-4 rounded-md ${
+                      darkMode ? "bg-gray-400" : "bg-gray-200"
+                    } text-sm`
+                  : `hover:bg-gray-100 py-1.5 px-4 rounded-md text-sm ${
+                      darkMode ? "text-gray-100" : ""
+                    }`
               }
             >
               Dashboard
             </a>
           </li>
-
-          <p className="text-xs text-gray-600 mt-4  p-2">Department</p>
+          <p
+            className={`text-xs text-gray-600 mt-4  p-2 ${
+              darkMode ? "text-gray-100" : ""
+            }`}
+          >
+            Department
+          </p>
 
           {departments.map((department, index) => (
             <li key={index} className="mb-4">
@@ -77,7 +211,13 @@ function SideBar() {
             </li>
           ))}
 
-          <p className="text-xs text-gray-600 mt-4 mb-2 p-2">Settings</p>
+          <p
+            className={`text-xs text-gray-600 mt-4 mb-2 p-2 ${
+              darkMode ? "text-gray-100" : ""
+            }`}
+          >
+            Settings
+          </p>
           <li className=" ">
             <a
               href="/settings"
@@ -97,8 +237,8 @@ function SideBar() {
               onClick={handleLogout}
               className={
                 location.pathname === "/settings"
-                  ? "hover:bg-gray-100 py-1.5 px-4 rounded-md bg-gray-200 text-sm"
-                  : "hover:bg-gray-100 py-1.5 px-4 rounded-md text-sm"
+                  ? "hover-bg-gray-100 py-1.5 px-4 rounded-md bg-gray-200 text-sm"
+                  : "hover-bg-gray-100 py-1.5 px-4 rounded-md text-sm"
               }
             >
               LogOut
@@ -112,9 +252,11 @@ function SideBar() {
             <img
               src={ProfilePic}
               alt="ProfilePic"
-              className="w-6 h-6 rounded-full"
+              className={`w-6 h-6 rounded-full ${
+                darkMode ? "filter brightness-75" : ""
+              }`}
             />
-            <p>#{data}</p>
+            <p className={`${darkMode ? "text-gray-300" : ""}`}>#{data}</p>
           </span>
         )}
       </div>
