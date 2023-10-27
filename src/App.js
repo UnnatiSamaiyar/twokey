@@ -28,7 +28,7 @@ const App = () => {
 
   return (
     <Router>
-      <div className="flex ">
+      <div className="flex relative">
         <SideBar />
         <div className="flex flex-col w-full">
           <TopBar />

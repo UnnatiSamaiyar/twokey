@@ -16,10 +16,17 @@ const TopBar = () => {
     return null;
   }
 
+  const topBarPath = location.pathname === "/dashboard";
+  let currentLocation = location.pathname;
+
   return (
     <nav className="h-[72px] w-full bg-white border-b-2 p-1">
       <div className="container mx-auto flex items-center justify-between h-16 px-8">
-        <p>Overview / Dashboard</p>
+        <p>
+          {topBarPath
+            ? "Overview / Dashboard"
+            : `Department  ${location.pathname}`}
+        </p>
         <div className="flex justify-between gap-8">
           <div className="relative w-96">
             <SearchIcon

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../helper/supabaseClient";
+import axios from "axios";
 
 const RecentFiles = () => {
   const [files, setFiles] = useState([]);
@@ -7,19 +8,25 @@ const RecentFiles = () => {
   useEffect(() => {
     async function fetchRecentFiles() {
       try {
-        const { data, error } = await supabase.storage.from("TwoKey").list();
-        // console.log("raw recent files ", data);
-        if (error) {
-          console.error("Error fetching files:", error.message);
-        } else {
-          const mappedFiles = data.map((file) => ({
-            name: file.name.substring(0, 80), // Limit file name to 120 characters
+        let token = JSON.parse(sessionStorage.getItem("token"));
+        const recentFilesFromBackend = await axios.get(
+          "https://twokeybackend.onrender.com/file/files/",
+          {
+            headers: {
+              Authorization: `Bearer ${token.session.access_token}`,
+            },
+          }
+        );
+
+        const mappedFiles = recentFilesFromBackend.data
+          .slice(0, 6) // Get the first 6 files
+          .map((file) => ({
+            name: file.name.substring(0, 80),
             size: formatFileSize(file.metadata.size),
-            previewURL: file.url, // Assuming the file URL is the preview URL
+            previewURL: file.url,
           }));
-          setFiles(mappedFiles);
-          // console.log("Recent files:", mappedFiles);
-        }
+        setFiles(mappedFiles);
+        console.log("Recent files from backend:", recentFilesFromBackend);
       } catch (error) {
         console.error("Error fetching files:", error);
       }
@@ -40,18 +47,20 @@ const RecentFiles = () => {
 
   return (
     <div>
+      <p className="text-lg font-semibold my-4">Recent Files</p>
       <div className="grid grid-cols-3 gap-4 text-gray-600">
-        {files.map((file, index) => (
-          <div
-            key={index}
-            className="border border-gray-200 p-2 rounded-lg shadow-md"
-          >
-            <img src={file.previewURL} alt="File Preview" />
-            <h5 className="font-semibold">{file.name}</h5>
-            <h6 className="text-sm font-semibold">File Info:</h6>
-            <p className="text-xs text-gray-500 font-light">{file.size}</p>
-          </div>
-        ))}
+        {files &&
+          files.map((file, index) => (
+            <div
+              key={index}
+              className="border border-gray-200 p-2 rounded-lg shadow-md"
+            >
+              <img src={file.previewURL} alt="File Preview" />
+              <h5 className="font-semibold">{file.name}</h5>
+              <h6 className="text-sm font-semibold">File Info:</h6>
+              <p className="text-xs text-gray-500 font-light">{file.size}</p>
+            </div>
+          ))}
       </div>
     </div>
   );

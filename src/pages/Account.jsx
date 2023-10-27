@@ -1,9 +1,12 @@
 import React from "react";
+import RecentFiles from "../components/RecentFiles";
+import AccountFiles from "../components/AccountFiles";
 
 const Account = () => {
   return (
-    <div>
-      account<h3>Welcome back, </h3>
+    <div className="p-4">
+      <RecentFiles />
+      <AccountFiles />
     </div>
   );
 };

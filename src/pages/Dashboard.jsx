@@ -64,10 +64,8 @@ const Dashboard = () => {
           ))}
         </div>
 
-        <p className="text-lg font-semibold my-4">Files</p>
         <FileTypes />
 
-        <p className="text-lg font-semibold my-4">Recent Files</p>
         <RecentFiles />
       </div>
     </div>

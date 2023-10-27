@@ -38,7 +38,7 @@ function SideBar() {
   ];
 
   return (
-    <nav className="h-screen w-1/6 p-4 bg-gray-50 border border-r-2 border-r-gray-200  flex flex-col justify-between ">
+    <nav className="h-auto flex flex-col justify-between w-1/6 p-4 bg-gray-50 border border-b-0 border-r-2 border-r-gray-200">
       <div>
         <a href="/dashboard" alt="LOGO" className="text-2xl text-gray-500 ">
           Twokey
