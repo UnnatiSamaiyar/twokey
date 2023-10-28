@@ -7,28 +7,12 @@ import ProtectedRoutes from "./utils/PrivateRoutes";
 import SideBar from "./components/SideBar";
 import TopBar from "./components/TopBar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useAuth } from "./context/authContext";
 
 const App = () => {
-  const [token, setToken] = useState("");
-  const [localData, setLocalData] = useState("");
+  const { token, setSessionToken } = useAuth();
+
   const [screenshotDetected, setScreenshotDetected] = useState(false);
-
-  if (token) {
-    sessionStorage.setItem("token", JSON.stringify(token));
-    localStorage.setItem("user", JSON.stringify(token.user));
-  }
-
-  useEffect(() => {
-    // Retrieve the token from sessionStorage and set it in state
-    let data = JSON.parse(sessionStorage.getItem("token"));
-    setToken(data);
-    // console.log("token (from sessionStorage):", data);
-
-    // Retrieve the token from localStorage and set it in state
-    let localUserData = JSON.parse(localStorage.getItem("user"));
-    setLocalData(localUserData);
-    // console.log("user (from localStorage):", localUserData);
-  }, []);
 
   // Prevent right-click context menu
   useEffect(() => {
@@ -75,9 +59,9 @@ const App = () => {
           e.preventDefault();
 
           console.log(
-            "Heheheheheheheheheheeh",
-            localData.email,
-            " took the ScreenShot."
+            "Hehehe",
+            token ? token.user.user_metadata.full_name : "Unknown User",
+            "took the ScreenShot."
           );
 
           setScreenshotDetected(true);
@@ -100,7 +84,7 @@ const App = () => {
     return () => {
       document.removeEventListener("keydown", preventPrintScreen);
     };
-  }, []);
+  }, [token]);
 
   return (
     <Router>
@@ -109,10 +93,10 @@ const App = () => {
         <div className="flex flex-col w-full ">
           <TopBar />
           <Routes>
-            <Route path={"/dashboard"} element={<Dashboard />} />
-            <Route path={"/account"} element={<Account />} />
-            <Route path={"/signup"} element={<SignUp />} />
-            <Route path={"/"} element={<Login />} exact />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/account" element={<Account />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/" element={<Login />} exact />
           </Routes>
         </div>
       </div>

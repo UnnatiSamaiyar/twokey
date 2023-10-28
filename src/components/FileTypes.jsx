@@ -9,129 +9,69 @@ import zipIcon from "../assets/zipIcon.png";
 import jpgIcon from "../assets/jpgIcon.png";
 
 const fileTypes = [
-  { type: "Documents", icon: docIcon },
-  { type: "PDF", icon: pdfIcon },
-  { type: "PPT", icon: pptIcon },
-  { type: "XLS", icon: xlsIcon },
-  { type: "ZIP", icon: zipIcon },
-  { type: "JPG", icon: jpgIcon },
+  { type: "Documents", icon: docIcon, mimeType: "application/msword" },
+  { type: "PDF", icon: pdfIcon, mimeType: "application/pdf" },
+  { type: "PPT", icon: pptIcon, mimeType: "application/vnd.ms-powerpoint" },
+  { type: "XLS", icon: xlsIcon, mimeType: "application/vnd.ms-excel" },
+  { type: "ZIP", icon: zipIcon, mimeType: "application/zip" },
+  { type: "JPG", icon: jpgIcon, mimeType: "image/jpeg" },
+  // { type: "Other", icon: docIcon, mimeType: "other" },
 ];
 
 const FileTypes = () => {
-  const [updatedFileTypes, setUpdatedFileTypes] = useState(fileTypes);
-  const [files, setFiles] = useState([]);
-
-  //   useEffect(() => {
-  //     async function fetchFileTypeFromSupabase() {
-  //       const { data, error } = await supabase.storage.from("TwoKey").list();
-
-  //       if (error) {
-  //         console.error("Error fetching file types:", error);
-  //         return;
-  //       }
-
-  //       const metadataArray = data.map(
-  //         (fileObject) => fileObject.metadata.mimetype
-  //       );
-
-  //       const mimeTypeToType = {
-  //         "application/msword": "Documents",
-  //         "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-  //           "Documents",
-  //         "application/pdf": "PDF",
-  //         "application/vnd.ms-powerpoint": "PPT",
-  //         "application/vnd.openxmlformats-officedocument.presentationml.presentation":
-  //           "PPT",
-  //         "application/vnd.ms-excel": "XLS",
-  //         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-  //           "XLS",
-  //         "application/zip": "ZIP",
-  //         "image/jpeg": "JPG",
-  //       };
-
-  //       const typeCount = {};
-
-  //       metadataArray.forEach((metadata) => {
-  //         const type = mimeTypeToType[metadata];
-  //         if (type) {
-  //           if (typeCount[type]) {
-  //             typeCount[type]++;
-  //           } else {
-  //             typeCount[type] = 1;
-  //           }
-  //         }
-  //       });
-
-  //       const updatedFileTypes = fileTypes.map((fileType) => ({
-  //         ...fileType,
-  //         fileCount: typeCount[fileType.type] || 0,
-  //       }));
-
-  //       setUpdatedFileTypes(updatedFileTypes);
-  //       //   console.log("updatedFileTypes ", updatedFileTypes);
-  //     }
-
-  //     fetchFileTypeFromSupabase();
-  //   }, []);
+  const [fileCounts, setFileCounts] = useState({});
 
   useEffect(() => {
-    async function fetchFileTypeFromSupabase() {
+    async function fetchFiles() {
       const { data, error } = await supabase.storage.from("TwoKey").list();
 
-      if (error) {
-        console.error("Error fetching file types:", error);
-        return;
-      }
+      if (!error) {
+        // Count files by MIME type
+        const fileTypeCounts = {};
+        data.forEach((file) => {
+          let mimeType = file.metadata.mimetype.toLowerCase();
 
-      const metadataArray = data.map(
-        (fileObject) => fileObject.metadata.mimetype
-      );
-
-      const mimeTypeToType = {
-        "application/msword": "Documents",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-          "Documents",
-        "application/pdf": "PDF",
-        "application/vnd.ms-powerpoint": "PPT",
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation":
-          "PPT",
-        "application/vnd.ms-excel": "XLS",
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-          "XLS",
-        "application/zip": "ZIP",
-        "image/jpeg": "JPG",
-      };
-
-      const typeCount = {};
-
-      metadataArray.forEach((metadata) => {
-        const type = mimeTypeToType[metadata];
-        if (type) {
-          if (typeCount[type]) {
-            typeCount[type]++;
+          // Check if the MIME type contains keywords
+          if (mimeType.includes(".document") || mimeType.includes(".word")) {
+            mimeType = "application/msword";
+          } else if (
+            mimeType.includes("ppt") ||
+            mimeType.includes("presentation") ||
+            mimeType.includes("powerpoint")
+          ) {
+            mimeType = "application/vnd.ms-powerpoint";
+          } else if (mimeType.includes("pdf")) {
+            mimeType = "application/pdf";
+          } else if (
+            mimeType.includes("csv") ||
+            mimeType.includes("xls") ||
+            mimeType.includes("ods")
+          ) {
+            mimeType = "application/vnd.ms-excel";
+          } else if (mimeType.includes("zip") || mimeType.includes("rar")) {
+            mimeType = "application/zip";
+          } else if (mimeType.includes("image/")) {
+            mimeType = "image/jpeg";
           } else {
-            typeCount[type] = 1;
+            mimeType = "other"; // Categorize as "Other" if not recognized
           }
-        }
-      });
 
-      const updatedFileTypes = fileTypes.map((fileType) => ({
-        ...fileType,
-        fileCount: typeCount[fileType.type] || 0,
-      }));
+          fileTypeCounts[mimeType] = (fileTypeCounts[mimeType] || 0) + 1;
+        });
 
-      setUpdatedFileTypes(updatedFileTypes);
-      console.log("updatedFileTypes:", updatedFileTypes); // Log the updated state here
+        console.log("fileTypeCounts", fileTypeCounts);
+        setFileCounts(fileTypeCounts);
+      }
     }
 
-    fetchFileTypeFromSupabase();
+    fetchFiles();
   }, []);
 
   return (
     <>
       <p className="text-lg font-semibold my-4">Files</p>
       <div className="grid grid-cols-6 gap-4">
-        {updatedFileTypes.map((file) => (
+        {fileTypes.map((file) => (
           <div
             className="flex flex-row justify-between items-center border p-2 rounded-lg"
             key={file.type}
@@ -145,7 +85,8 @@ const FileTypes = () => {
               <span>
                 <p className="text-md font-semibold">{file.type}</p>
                 <p className="text-xs">
-                  {file.fileCount ? file.fileCount : "0"} files
+                  {fileCounts[file.mimeType] ? fileCounts[file.mimeType] : 0}{" "}
+                  files
                 </p>
               </span>
             </span>

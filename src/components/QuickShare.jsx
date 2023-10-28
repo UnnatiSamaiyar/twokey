@@ -13,6 +13,7 @@ export default function QuickShare() {
   const [open, setOpen] = useState(false);
   const [droppedFiles, setDroppedFiles] = useState([]);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [customFileName, setCustomFileName] = useState("");
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
@@ -26,6 +27,7 @@ export default function QuickShare() {
     setOpen(false);
     setDroppedFiles([]);
     setSuccessMessage(null);
+    setCustomFileName("");
   };
 
   const handleRemoveFile = (fileIndex) => {
@@ -41,12 +43,24 @@ export default function QuickShare() {
     setSnackbarOpen(false);
   };
 
+  // Regular expression to allow only alphabet, numbers, and period
+  const fileNameRegex = /^[A-Za-z0-9.@]+$/;
+
+  // Handler for custom file name input
+  const handleFileNameChange = (e) => {
+    const inputValue = e.target.value;
+    if (fileNameRegex.test(inputValue) || inputValue === "") {
+      setCustomFileName(inputValue);
+    }
+  };
+
   const handleUpload = async () => {
     try {
       for (const file of droppedFiles) {
+        const fileName = customFileName || file.name; // Use custom name if provided
         const { data, error } = await supabase.storage
           .from("TwoKey")
-          .upload(file.name, file, {
+          .upload(fileName, file, {
             cacheControl: "3600",
             upsert: false,
           });
@@ -59,7 +73,9 @@ export default function QuickShare() {
           setSnackbarMessage("Upload successful");
         }
         setSnackbarOpen(true);
-        setOpen(false); // Close the dialog
+        setOpen(false);
+        setDroppedFiles([]);
+        setCustomFileName("");
       }
     } catch (error) {
       console.error("Error in handleUpload:", error);
@@ -90,9 +106,19 @@ export default function QuickShare() {
         <DialogTitle>Quick Share</DialogTitle>
         <DialogContent className="p-4 bg-gray-100">
           <DialogContentText></DialogContentText>
+          <p className="text-sm font-semibold mt-2">
+            File name<span className="text-blue-800 ml-1">*</span>
+          </p>
+          <input
+            type="text"
+            value={customFileName}
+            onChange={handleFileNameChange}
+            className="w-full py-1 px-2 my-2 border border-gray-200 rounded-md"
+            required
+          />
           <div
             {...getRootProps()}
-            className={`mt-4 h-64 w-80 flex items-center justify-center border-2 border-dashed border-gray-400 p-4 rounded-md text-center cursor-pointer ${
+            className={`mt-2 h-64 w-80 flex items-center justify-center border-2 border-dashed border-gray-400 p-4 rounded-md text-center cursor-pointer ${
               isDragActive
                 ? "bg-blue-50 border-blue-500"
                 : "hover:bg-blue-50 hover:border-blue-500"

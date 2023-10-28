@@ -39,6 +39,16 @@ const RecentFiles = () => {
     fetchRecentFiles();
   }, []);
 
+  useEffect(() => {
+    async function recent() {
+      const { data, error } = await supabase.storage.from("TwoKey").list();
+
+      console.log("test recent data:", data);
+    }
+
+    recent();
+  }, []);
+
   function formatFileSize(sizeInBytes) {
     const units = ["B", "KB", "MB", "GB"];
     let size = sizeInBytes;
