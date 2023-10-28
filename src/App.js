@@ -3,15 +3,20 @@ import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Account from "./pages/Account";
-import ProtectedRoutes from "./utils/PrivateRoutes";
+import PrivateRoutes from "./utils/PrivateRoutes";
 import SideBar from "./components/SideBar";
 import TopBar from "./components/TopBar";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Onboarding from "./pages/Onboarding";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { useAuth } from "./context/authContext";
 
 const App = () => {
-  const { token, setSessionToken } = useAuth();
-
+  const { token } = useAuth();
   const [screenshotDetected, setScreenshotDetected] = useState(false);
 
   // Prevent right-click context menu
@@ -95,6 +100,8 @@ const App = () => {
           <Routes>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/account" element={<Account />} />
+            <Route path="/onboarding" element={<Onboarding />} />
+            {/* <Route path="/xyz" element={<Navigate to="/" />} /> */}
             <Route path="/signup" element={<SignUp />} />
             <Route path="/" element={<Login />} exact />
           </Routes>

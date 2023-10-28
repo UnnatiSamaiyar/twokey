@@ -23,7 +23,9 @@ function SideBar() {
   }, []);
 
   const hideSideBar =
-    location.pathname === "/" || location.pathname === "/signup";
+    location.pathname === "/" ||
+    location.pathname === "/signup" ||
+    location.pathname === "/onboarding";
 
   if (hideSideBar) {
     return null; // Don't render the SideBar

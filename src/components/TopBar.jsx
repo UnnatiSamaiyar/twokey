@@ -12,7 +12,9 @@ const TopBar = () => {
   const { darkMode, toggleDarkMode } = useDarkMode(); // Use the dark mode context
 
   const hideTopBar =
-    location.pathname === "/" || location.pathname === "/signup";
+    location.pathname === "/" ||
+    location.pathname === "/signup" ||
+    location.pathname === "/onboarding";
 
   if (hideTopBar) {
     return null;
