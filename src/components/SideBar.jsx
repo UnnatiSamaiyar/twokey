@@ -250,16 +250,24 @@ function SideBar() {
       </div>
       <div>
         {data && (
-          <span className="flex gap-2 items-center">
-            <img
-              src={ProfilePic}
-              alt="ProfilePic"
-              className={`w-6 h-6 rounded-full ${
-                darkMode ? "filter brightness-75" : ""
-              }`}
-            />
-            <p className={`${darkMode ? "text-gray-300" : ""}`}>#{data}</p>
-          </span>
+          <footer className="fixed bottom-4 left-4">
+            <span className="flex gap-2">
+              <img
+                src={ProfilePic}
+                alt="ProfilePic"
+                className={`w-6 h-6 rounded-full ${
+                  darkMode ? "filter brightness-75" : ""
+                }`}
+              />
+              <a
+                href="/profile"
+                alt="Profile"
+                className={`${darkMode ? "text-gray-300" : ""}`}
+              >
+                #{data}
+              </a>
+            </span>
+          </footer>
         )}
       </div>
     </nav>

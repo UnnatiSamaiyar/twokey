@@ -7,6 +7,8 @@ import PrivateRoutes from "./utils/PrivateRoutes";
 import SideBar from "./components/SideBar";
 import TopBar from "./components/TopBar";
 import Onboarding from "./pages/Onboarding";
+import Profile from "./pages/Profile";
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -101,6 +103,7 @@ const App = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/account" element={<Account />} />
             <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/profile" element={<Profile />} />
             {/* <Route path="/xyz" element={<Navigate to="/" />} /> */}
             <Route path="/signup" element={<SignUp />} />
             <Route path="/" element={<Login />} exact />

@@ -1,16 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../helper/supabaseClient";
 import axios from "axios";
+import FileDrawer from "./FileDrawer";
 
 const RecentFiles = () => {
   const [files, setFiles] = useState([]);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedFileName, setSelectedFileName] = useState("");
+  const [selectedFileSize, setSelectedFileSize] = useState("");
+
+  const openDrawer = (fileName, fileSize) => {
+    setSelectedFileName(fileName);
+    setSelectedFileSize(fileSize);
+    setIsDrawerOpen(true);
+  };
+
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+  };
 
   useEffect(() => {
     async function fetchRecentFiles() {
       try {
         let token = JSON.parse(sessionStorage.getItem("token"));
-
-        // console.log("token in recent files 1 :", token.session.access_token);
 
         const recentFilesFromBackend = await axios.get(
           "https://twokeybackend.onrender.com/file/files/",
@@ -21,17 +33,15 @@ const RecentFiles = () => {
           }
         );
 
-        // console.log("token in recent files 2 :", token.session.access_token);
-
         const mappedFiles = recentFilesFromBackend.data
-          .slice(0, 6) // Get the first 6 files
+          // .slice(0, 6)
           .map((file) => ({
             name: file.name.substring(0, 80),
             size: formatFileSize(file.metadata.size),
             previewURL: file.url,
           }));
+        console.log(mappedFiles);
         setFiles(mappedFiles);
-        console.log("Recent files from backend:", recentFilesFromBackend);
       } catch (error) {
         console.error("Error fetching files:", error);
       }
@@ -42,12 +52,9 @@ const RecentFiles = () => {
   useEffect(() => {
     async function recent() {
       const { data, error } = await supabase.storage.from("TwoKey").list();
-
-      console.log("test recent data:", data);
     }
-
     recent();
-  }, []);
+  });
 
   function formatFileSize(sizeInBytes) {
     const units = ["B", "KB", "MB", "GB"];
@@ -68,7 +75,8 @@ const RecentFiles = () => {
           files.map((file, index) => (
             <div
               key={index}
-              className="border border-gray-200 p-2 rounded-lg shadow-md"
+              className="border border-gray-200 p-2 rounded-lg shadow-md cursor-pointer"
+              onClick={() => openDrawer(file.name, file.size)} // Pass name and size to openDrawer
             >
               <img src={file.previewURL} alt="File Preview" />
               <h5 className="font-semibold">{file.name}</h5>
@@ -77,6 +85,14 @@ const RecentFiles = () => {
             </div>
           ))}
       </div>
+
+      {/* FileDrawer component to manage the drawer */}
+      <FileDrawer
+        isDrawerOpen={isDrawerOpen}
+        closeDrawer={closeDrawer}
+        selectedFileName={selectedFileName}
+        selectedFileSize={selectedFileSize}
+      />
     </div>
   );
 };

@@ -86,7 +86,7 @@ const FileTypes = () => {
                 <p className="text-md font-semibold">{file.type}</p>
                 <p className="text-xs">
                   {fileCounts[file.mimeType] ? fileCounts[file.mimeType] : 0}{" "}
-                  files
+                  {fileCounts[file.mimeType] === 1 ? "file" : "files"}{" "}
                 </p>
               </span>
             </span>

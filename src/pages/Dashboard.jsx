@@ -40,6 +40,10 @@ const Dashboard = () => {
       <div>
         <span className="flex flex-row justify-between items-center my-4">
           <p className="text-lg font-semibold">Folders</p>
+          <button className="px-2 border rounded-lg text-xl text-center">
+            {" "}
+            +{" "}
+          </button>
         </span>
 
         <div className="grid grid-cols-4 gap-4">
