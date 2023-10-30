@@ -87,7 +87,7 @@ const FileDrawer = ({
   return (
     <Drawer anchor="right" open={isDrawerOpen} onClose={closeDrawer}>
       <div
-        className={`drawer-content w-80 p-4 ${
+        className={`drawer-content w-64 p-4 bg-white bg-inherit ${
           screenshotDetected ? "blur" : ""
         }`}
       >

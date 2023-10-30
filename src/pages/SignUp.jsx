@@ -11,15 +11,6 @@ import Typography from "@mui/material/Typography";
 
 import twokeyLanding from "../assets/twokeyLanding.png";
 
-// import { createClient } from "@supabase/supabase-js";
-
-// // const supabaseUrl = process.env.SUPABASE_URL;
-// // const supabaseKey = process.env.SUPABASE_ANON_KEY;
-// const supabase = createClient(
-//   process.env.SUPABASE_URL,
-//   process.env.SUPABASE_ANON_KEY
-// );
-
 const SignUp = () => {
   const [formData, setFormData] = useState({
     fullName: "",

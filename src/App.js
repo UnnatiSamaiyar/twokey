@@ -66,7 +66,6 @@ const App = () => {
           e.preventDefault();
 
           console.log(
-            "Hehehe",
             token ? token.user.user_metadata.full_name : "Unknown User",
             "took the ScreenShot."
           );

@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ProfilePic from "../assets/profilePic.png";
 import { useDarkMode } from "../context/darkModeContext";
+import { useAuth } from "../context/authContext";
 
 function SideBar() {
   const location = useLocation();
+  const { token } = useAuth();
   const [data, setData] = useState("");
   const { darkMode } = useDarkMode();
   let navigate = useNavigate();
@@ -15,12 +17,14 @@ function SideBar() {
   }
 
   useEffect(() => {
-    if (sessionStorage.getItem("token")) {
-      let res = JSON.parse(sessionStorage.getItem("token"));
-      setData(res.user.user_metadata.full_name);
-      console.log("sidebar", res.user.user_metadata.full_name);
+    if (token) {
+      setData(token.user.user_metadata.full_name);
+      console.log(
+        "sidebar context token :",
+        token.user.user_metadata.full_name
+      );
     }
-  }, []);
+  }, [token]);
 
   const hideSideBar =
     location.pathname === "/" ||
@@ -251,19 +255,21 @@ function SideBar() {
       <div>
         {data && (
           <footer className="fixed bottom-4 left-4">
-            <span className="flex gap-2">
-              <img
-                src={ProfilePic}
-                alt="ProfilePic"
-                className={`w-6 h-6 rounded-full ${
-                  darkMode ? "filter brightness-75" : ""
-                }`}
-              />
+            <span className="">
               <a
                 href="/profile"
                 alt="Profile"
-                className={`${darkMode ? "text-gray-300" : ""}`}
+                className={`${
+                  darkMode ? "text-gray-300" : ""
+                } flex flex-row gap-2`}
               >
+                <img
+                  src={ProfilePic}
+                  alt="ProfilePic"
+                  className={`w-6 h-6 rounded-full ${
+                    darkMode ? "filter brightness-200 border border-white" : ""
+                  }`}
+                />
                 #{data}
               </a>
             </span>
