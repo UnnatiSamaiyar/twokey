@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../helper/supabaseClient";
-import axios from "axios";
 import docIcon from "../assets/docIcon.png";
 import pdfIcon from "../assets/pdfIcon.png";
 import pptIcon from "../assets/pptIcon.png";

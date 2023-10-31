@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React from "react";
+import { useLocation } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
-import NotificationsNoneTwoToneIcon from "@mui/icons-material/NotificationsNoneTwoTone";
 import NotificationsIcon from "../assets/notification.svg";
 import LightMode from "../assets/lightMode.svg";
 import DarkMode from "../assets/darkMode.svg";
-import { useDarkMode } from "../context/darkModeContext"; // Import the useDarkMode hook
+import { useDarkMode } from "../context/darkModeContext";
 
 const TopBar = () => {
   const location = useLocation();
-  const { darkMode, toggleDarkMode } = useDarkMode(); // Use the dark mode context
+  const { darkMode, toggleDarkMode } = useDarkMode();
 
   const hideTopBar =
     location.pathname === "/" ||

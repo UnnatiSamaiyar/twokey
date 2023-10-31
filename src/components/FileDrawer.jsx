@@ -3,7 +3,7 @@ import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { supabase } from "../helper/supabaseClient";
-import FileViewer from "./FileViewer";
+import { useAuth } from "../context/authContext";
 
 const FileDrawer = ({
   isDrawerOpen,
@@ -12,7 +12,16 @@ const FileDrawer = ({
   selectedFileSize,
 }) => {
   const [screenshotDetected, setScreenshotDetected] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const { isFileViewerOpen, openFileViewer, closeFileViewer } = useAuth();
+
+  const toggleFileViewer = () => {
+    if (isFileViewerOpen) {
+      closeFileViewer();
+    } else {
+      openFileViewer();
+    }
+  };
 
   useEffect(() => {
     const preventPrintScreen = (e) => {
@@ -76,14 +85,6 @@ const FileDrawer = ({
     }
   };
 
-  const handleOpenDialog = () => {
-    setIsDialogOpen(true);
-  };
-
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false);
-  };
-
   return (
     <Drawer anchor="right" open={isDrawerOpen} onClose={closeDrawer}>
       <div
@@ -134,13 +135,13 @@ const FileDrawer = ({
         </span>
         <button
           className="bg-green-600 text-white py-1 px-4 rounded-md w-full my-2"
-          onClick={handleOpenDialog}
+          onClick={toggleFileViewer}
         >
           Open
         </button>
         <span className="flex justify-between gap-2">
           <button
-            className="bg-blue-600 text-white py-1 px-4 rounded-md w-full my-2"
+            className="bg-green-600 text-white py-1 px-4 rounded-md w-full my-2"
             onClick={handleDownload}
           >
             Download
@@ -153,13 +154,6 @@ const FileDrawer = ({
           </button>
         </span>
       </div>
-
-      <FileViewer
-        open={isDialogOpen}
-        onClose={handleCloseDialog}
-        name={selectedFileName}
-        selectedFileSize={selectedFileSize}
-      />
     </Drawer>
   );
 };

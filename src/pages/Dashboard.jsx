@@ -4,6 +4,9 @@ import RecentFiles from "../components/RecentFiles";
 import FileTypes from "../components/FileTypes";
 import FolderImg from "../assets/folder.svg";
 import { useDarkMode } from "../context/darkModeContext";
+import { Dialog } from "@mui/material";
+import FileViewer from "../components/FileViewer";
+import { useAuth } from "../context/authContext";
 
 let folders = [
   "Account",
@@ -16,6 +19,7 @@ let folders = [
 
 const Dashboard = () => {
   const { darkMode } = useDarkMode();
+  const { isFileViewerOpen, closeFileViewer } = useAuth();
 
   return (
     <div
@@ -90,6 +94,10 @@ const Dashboard = () => {
 
         <RecentFiles />
       </div>
+
+      <Dialog open={isFileViewerOpen} onClose={closeFileViewer} maxWidth="lg">
+        <FileViewer onClose={closeFileViewer} />{" "}
+      </Dialog>
     </div>
   );
 };

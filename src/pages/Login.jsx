@@ -6,7 +6,6 @@ import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import Typography from "@mui/material/Typography";
 import twokeyLanding from "../assets/twokeyLanding.png";
 
 const Login = () => {
