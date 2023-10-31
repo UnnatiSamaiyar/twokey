@@ -7,6 +7,12 @@ export const AuthProvider = ({ children }) => {
   const [isFileViewerOpen, setIsFileViewerOpen] = useState(false);
   const [screenshotDetected, setScreenshotDetected] = useState(false);
 
+  const [location, setLocation] = useState(null);
+  const [error, setError] = useState(null);
+
+  const [position, setPosition] = useState(null);
+  const [watchError, setWatchError] = useState(null);
+
   useEffect(() => {
     // Prevent right-click
     const preventRightClick = (e) => {
@@ -92,6 +98,34 @@ export const AuthProvider = ({ children }) => {
     setIsFileViewerOpen(false);
   };
 
+  function getGeolocation() {
+    let watchId;
+
+    if ("geolocation" in navigator) {
+      watchId = navigator.geolocation.watchPosition(
+        (position) => {
+          const { coords } = position;
+          setLocation({
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+          });
+        },
+        (error) => {
+          setError(error.message);
+        }
+      );
+    } else {
+      setWatchError("Geolocation is not supported in your browser.");
+    }
+
+    // Clean up the watch when the component unmounts
+    return () => {
+      if (watchId) {
+        navigator.geolocation.clearWatch(watchId);
+      }
+    };
+  }
+
   const contextValue = {
     isFileViewerOpen,
     openFileViewer,
@@ -100,6 +134,9 @@ export const AuthProvider = ({ children }) => {
     setSessionToken,
     screenshotDetected,
     setScreenshotDetected,
+    location,
+    error,
+    getGeolocation,
   };
 
   return (
