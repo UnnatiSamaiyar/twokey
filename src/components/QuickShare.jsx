@@ -8,9 +8,12 @@ import { useDropzone } from "react-dropzone";
 import { supabase } from "../helper/supabaseClient";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import QuickShare2 from "./QuickShare2";
+import { useAuth } from "../context/authContext";
 
 export default function QuickShare() {
   const [open, setOpen] = useState(false);
+  const [reviewOpen, setReviewOpen] = useState(false);
   const [droppedFiles, setDroppedFiles] = useState([]);
   const [successMessage, setSuccessMessage] = useState(null);
   const [customFileName, setCustomFileName] = useState("");
@@ -18,6 +21,7 @@ export default function QuickShare() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const { listUsers } = useAuth();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -43,10 +47,8 @@ export default function QuickShare() {
     setSnackbarOpen(false);
   };
 
-  // Regular expression to allow only alphabet, numbers, and period
   const fileNameRegex = /^[A-Za-z0-9.@]+$/;
 
-  // Handler for custom file name input
   const handleFileNameChange = (e) => {
     const inputValue = e.target.value;
     if (fileNameRegex.test(inputValue) || inputValue === "") {
@@ -55,39 +57,17 @@ export default function QuickShare() {
   };
 
   const handleUpload = async () => {
-    try {
-      for (const file of droppedFiles) {
-        const fileName = customFileName || file.name; // Use custom name if provided
-        const { data, error } = await supabase.storage
-          .from("TwoKey")
-          .upload(fileName, file, {
-            cacheControl: "3600",
-            upsert: false,
-          });
-        if (error) {
-          console.error("Error uploading file:", error);
-          setSnackbarSeverity("error");
-          setSnackbarMessage("Upload failed");
-        } else {
-          setSnackbarSeverity("success");
-          setSnackbarMessage("Upload successful");
-        }
-        setSnackbarOpen(true);
-        setOpen(false);
-        setDroppedFiles([]);
-        setCustomFileName("");
-      }
-    } catch (error) {
-      console.error("Error in handleUpload:", error);
-      setSnackbarSeverity("error");
-      setSnackbarMessage("Upload failed");
-      setSnackbarOpen(true);
-    }
+    setReviewOpen(true);
+    setOpen(false);
   };
 
   const onDrop = (acceptedFiles, rejectedFiles) => {
     setDroppedFiles([...droppedFiles, ...acceptedFiles]);
     console.log("Rejected files:", rejectedFiles);
+  };
+
+  const handleFinalUpload = async () => {
+    // Your upload logic for the review dialog can be added here.
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -137,7 +117,7 @@ export default function QuickShare() {
                 {droppedFiles.map((file, index) => (
                   <li
                     key={file.name}
-                    className="text-xs bg-white border border-gray-200 rounded-sm py-1 px-2 mb-1 flex items-center justify-between"
+                    className="text-xs bg-white border border-gray-200 rounded-md py-2 px-4 mb-1 flex items-center justify-between"
                   >
                     <span>{file.name}</span>
                     <button
@@ -160,13 +140,23 @@ export default function QuickShare() {
             Cancel
           </button>
           <button
-            onClick={handleUpload}
+            onClick={() => {
+              handleUpload();
+              listUsers();
+            }}
             className="bg-blue-700 text-white py-1 px-3 rounded-md"
           >
             Upload
           </button>
         </DialogActions>
       </Dialog>
+      <QuickShare2
+        open={reviewOpen}
+        onClose={() => setReviewOpen(false)}
+        droppedFiles={droppedFiles}
+        handleRemoveFile={handleRemoveFile}
+        handleFinalUpload={handleFinalUpload}
+      />
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}

@@ -19,7 +19,7 @@ let folders = [
 
 const Dashboard = () => {
   const { darkMode } = useDarkMode();
-  const { isFileViewerOpen, closeFileViewer } = useAuth();
+  const { isFileViewerOpen, closeFileViewer, screenshotDetected } = useAuth();
 
   return (
     <div
@@ -94,10 +94,11 @@ const Dashboard = () => {
 
         <RecentFiles />
       </div>
-
+      {/* <div className={`${screenshotDetected ? "blur" : ""}`}> */}
       <Dialog open={isFileViewerOpen} onClose={closeFileViewer} maxWidth="lg">
         <FileViewer onClose={closeFileViewer} />{" "}
       </Dialog>
+      {/* </div> */}
     </div>
   );
 };

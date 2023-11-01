@@ -12,13 +12,13 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useAuth } from "./context/authContext";
 
 const App = () => {
-  const { token, screenshotDetected, setScreenshotDetected } = useAuth();
+  const { token, screenshotDetected } = useAuth();
 
   // Prevent right-click context menu
 
   return (
     <Router>
-      <div className={`flex relative ${screenshotDetected ? "blur" : ""}`}>
+      <div className="flex relative ">
         <SideBar />
         <div className="flex flex-col w-full ">
           <TopBar />

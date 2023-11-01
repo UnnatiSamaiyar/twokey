@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios";
 
 const AuthContext = createContext();
 
@@ -6,12 +7,9 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [isFileViewerOpen, setIsFileViewerOpen] = useState(false);
   const [screenshotDetected, setScreenshotDetected] = useState(false);
-
+  const [users, setUsers] = useState([]);
   const [location, setLocation] = useState(null);
   const [error, setError] = useState(null);
-
-  const [position, setPosition] = useState(null);
-  const [watchError, setWatchError] = useState(null);
 
   useEffect(() => {
     // Prevent right-click
@@ -115,7 +113,7 @@ export const AuthProvider = ({ children }) => {
         }
       );
     } else {
-      setWatchError("Geolocation is not supported in your browser.");
+      setError("Geolocation is not supported in your browser.");
     }
 
     // Clean up the watch when the component unmounts
@@ -125,6 +123,23 @@ export const AuthProvider = ({ children }) => {
       }
     };
   }
+
+  const listUsers = async () => {
+    try {
+      const userList = await axios.get(
+        "https://twokeybackend.onrender.com/users/list_users/",
+        {
+          headers: {
+            Authorization: `Bearer ${token.session.access_token}`,
+          },
+        }
+      );
+      // console.log("users :", userList.data);
+      setUsers(userList.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const contextValue = {
     isFileViewerOpen,
@@ -137,6 +152,8 @@ export const AuthProvider = ({ children }) => {
     location,
     error,
     getGeolocation,
+    listUsers,
+    users,
   };
 
   return (
