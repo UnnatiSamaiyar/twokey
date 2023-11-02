@@ -34,7 +34,7 @@ const RecentFiles = () => {
         );
 
         const mappedFiles = recentFilesFromBackend.data
-          // .slice(0, 6)
+          .slice(0, 6)
           .map((file) => ({
             name: file.name.substring(0, 80),
             size: formatFileSize(file.metadata.size),

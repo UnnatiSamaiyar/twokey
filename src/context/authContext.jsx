@@ -22,6 +22,25 @@ export const AuthProvider = ({ children }) => {
     // Detect keypress
     const handleKeyPress = (e) => {
       console.log("Key pressed:", e.key);
+
+      // check the data type of the clipboard item
+      navigator.clipboard.read().then((data) => {
+        const types = data[0].types;
+        let hasImageType = false;
+
+        for (const type of types) {
+          if (type.startsWith("image")) {
+            hasImageType = true;
+            break;
+          }
+        }
+
+        if (hasImageType) {
+          console.log("ScreenShot captured.");
+        } else {
+          console.log("Clipboard data does not contain an image type.");
+        }
+      });
     };
 
     document.addEventListener("keydown", handleKeyPress);
@@ -46,6 +65,12 @@ export const AuthProvider = ({ children }) => {
           "Alt",
           "Insert",
         ];
+
+        // if (e.keyCode === 114) {
+        //   //keyCode for Print Screen key
+        //   e.preventDefault();
+        // }
+
         if (forbiddenKeys.includes(e.key)) {
           e.preventDefault();
 
@@ -56,10 +81,10 @@ export const AuthProvider = ({ children }) => {
 
           setScreenshotDetected(true);
 
-          // Remove the blur class after 2 seconds
+          // Remove the blur class after 3 seconds
           setTimeout(() => {
             setScreenshotDetected(false);
-          }, 2000);
+          }, 3000);
         }
       } catch (error) {
         console.error(
@@ -69,10 +94,10 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
-    document.addEventListener("keydown", preventPrintScreen);
+    document.addEventListener("keypress", preventPrintScreen);
 
     return () => {
-      document.removeEventListener("keydown", preventPrintScreen);
+      document.removeEventListener("keypress", preventPrintScreen);
     };
   }, [token]);
 

@@ -8,21 +8,27 @@ const Profile = () => {
   // console.log("position in profile", location);
   // console.log("watchError in profile", error);
 
-  const getFileUrl = async () => {
-    try {
-      const fileUrl = await axios.get(
-        "https://twokeybackend.onrender.com/file/getPresigned/d1823f2d-3acd-4b7f-8b4f-90a875811966/",
-        {
-          headers: {
-            Authorization: `Bearer ${token.session.access_token}`,
-          },
-        }
-      );
-      console.log("fileUrl :", fileUrl);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const getFileUrl = async () => {
+  //   const data = {
+  //     latitude: 18.6161,
+  //     longitude: 73.7286,
+  //   };
+  //   try {
+  //     console.log("token :", token.session.access_token);
+  //     const fileUrl = await axios.post(
+  //       "https://twokeybackend.onrender.com/file/getPresigned/cb06a3b6-9240-4912-9d7e-80d44e2d5dec/",
+  //       data,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token.session.access_token}`,
+  //         },
+  //       }
+  //     );
+  //     console.log("fileUrl :", fileUrl);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const listUsers = async () => {
     try {
@@ -58,12 +64,12 @@ const Profile = () => {
         </p>
       )}
 
-      <button
+      {/* <button
         className="py-2 px-4 bg-green-500 text-white rounded-md"
         onClick={getFileUrl}
       >
-        Get getFileUrl
-      </button>
+        Get fileUrl
+      </button> */}
 
       <button
         className="py-2 px-4 bg-red-400 text-white rounded-md"

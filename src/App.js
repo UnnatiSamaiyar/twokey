@@ -12,9 +12,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useAuth } from "./context/authContext";
 
 const App = () => {
-  const { token, screenshotDetected } = useAuth();
-
-  // Prevent right-click context menu
+  const { token } = useAuth();
 
   return (
     <Router>

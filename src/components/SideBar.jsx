@@ -6,7 +6,7 @@ import { useAuth } from "../context/authContext";
 
 function SideBar() {
   const location = useLocation();
-  const { token } = useAuth();
+
   const [data, setData] = useState("");
   const { darkMode } = useDarkMode();
   let navigate = useNavigate();
@@ -17,14 +17,19 @@ function SideBar() {
   }
 
   useEffect(() => {
-    if (token) {
-      setData(token.user.user_metadata.full_name);
-      console.log(
-        "sidebar context token :",
-        token.user.user_metadata.full_name
-      );
+    async function fetchUser() {
+      try {
+        let token = JSON.parse(sessionStorage.getItem("token"));
+        setData(token.user.user_metadata.full_name);
+
+        console.log("sidebar token :", token.user.user_metadata.full_name);
+      } catch (error) {
+        console.log("Error while fetching the user profile data.");
+      }
     }
-  }, [token]);
+
+    fetchUser();
+  }, []);
 
   const hideSideBar =
     location.pathname === "/" ||
@@ -143,40 +148,26 @@ function SideBar() {
         </ul>
       </div>
       <div>
-        {data && (
-          <footer className="fixed bottom-4 left-4">
-            <span className="">
-              {token ? (
-                <a
-                  href="/profile"
-                  alt="Profile"
-                  className={`${
-                    darkMode ? "text-gray-300" : ""
-                  } flex flex-row gap-2`}
-                >
-                  <img
-                    src={ProfilePic}
-                    alt="ProfilePic"
-                    className={`w-6 h-6 rounded-full ${
-                      darkMode
-                        ? "filter brightness-200 border border-white"
-                        : ""
-                    }`}
-                  />
-                  #{token.user.user_metadata.full_name}
-                </a>
-              ) : (
-                <a
-                  href="/profile"
-                  alt="Profile"
-                  className={`${darkMode ? "text-gray-300" : ""} `}
-                >
-                  #Profile
-                </a>
-              )}
-            </span>
-          </footer>
-        )}
+        <footer className="fixed bottom-4 left-4">
+          <span className="">
+            <a
+              href="/profile"
+              alt="Profile"
+              className={`${
+                darkMode ? "text-gray-300" : ""
+              } flex flex-row gap-2`}
+            >
+              <img
+                src={ProfilePic}
+                alt="ProfilePic"
+                className={`w-6 h-6 rounded-full ${
+                  darkMode ? "filter brightness-200 border border-white" : ""
+                }`}
+              />
+              #{data ? data : "Profile"}
+            </a>
+          </span>
+        </footer>
       </div>
     </nav>
   );

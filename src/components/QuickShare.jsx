@@ -5,9 +5,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useDropzone } from "react-dropzone";
-import { supabase } from "../helper/supabaseClient";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
 import QuickShare2 from "./QuickShare2";
 import { useAuth } from "../context/authContext";
 
@@ -15,12 +12,7 @@ export default function QuickShare() {
   const [open, setOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [droppedFiles, setDroppedFiles] = useState([]);
-  const [successMessage, setSuccessMessage] = useState(null);
   const [customFileName, setCustomFileName] = useState("");
-
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-  const [snackbarMessage, setSnackbarMessage] = useState("");
   const { listUsers } = useAuth();
 
   const handleClickOpen = () => {
@@ -30,7 +22,6 @@ export default function QuickShare() {
   const handleClose = () => {
     setOpen(false);
     setDroppedFiles([]);
-    setSuccessMessage(null);
     setCustomFileName("");
   };
 
@@ -38,13 +29,6 @@ export default function QuickShare() {
     const updatedFiles = [...droppedFiles];
     updatedFiles.splice(fileIndex, 1);
     setDroppedFiles(updatedFiles);
-  };
-
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setSnackbarOpen(false);
   };
 
   const fileNameRegex = /^[A-Za-z0-9.@]+$/;
@@ -66,10 +50,6 @@ export default function QuickShare() {
     console.log("Rejected files:", rejectedFiles);
   };
 
-  const handleFinalUpload = async () => {
-    // Your upload logic for the review dialog can be added here.
-  };
-
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
   });
@@ -82,11 +62,19 @@ export default function QuickShare() {
       >
         Quick Share
       </button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            borderRadius: "15px",
+          },
+        }}
+      >
         <DialogTitle>Quick Share</DialogTitle>
         <DialogContent className="p-4 bg-gray-100">
           <DialogContentText></DialogContentText>
-          <p className="text-sm font-semibold mt-2">
+          {/* <p className="text-sm font-semibold mt-2">
             File name<span className="text-blue-800 ml-1">*</span>
           </p>
           <input
@@ -95,7 +83,7 @@ export default function QuickShare() {
             onChange={handleFileNameChange}
             className="w-full py-1 px-2 my-2 border border-gray-200 rounded-md"
             required
-          />
+          /> */}
           <div
             {...getRootProps()}
             className={`mt-2 h-64 w-80 flex items-center justify-center border-2 border-dashed border-gray-400 p-4 rounded-md text-center cursor-pointer ${
@@ -132,10 +120,10 @@ export default function QuickShare() {
             </div>
           )}
         </DialogContent>
-        <DialogActions>
+        <DialogActions style={{ margin: "5px" }}>
           <button
             onClick={handleClose}
-            className="text-black border border-gray-300 py-1 px-3 rounded-md"
+            className="text-black border border-gray-300 py-1 px-3 rounded-lg"
           >
             Cancel
           </button>
@@ -144,7 +132,7 @@ export default function QuickShare() {
               handleUpload();
               listUsers();
             }}
-            className="bg-blue-700 text-white py-1 px-3 rounded-md"
+            className="bg-blue-700 text-white py-1 px-3 rounded-lg"
           >
             Upload
           </button>
@@ -155,21 +143,7 @@ export default function QuickShare() {
         onClose={() => setReviewOpen(false)}
         droppedFiles={droppedFiles}
         handleRemoveFile={handleRemoveFile}
-        handleFinalUpload={handleFinalUpload}
       />
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <MuiAlert
-          onClose={handleSnackbarClose}
-          severity={snackbarSeverity}
-          sx={{ width: "100%" }}
-        >
-          {snackbarMessage}
-        </MuiAlert>
-      </Snackbar>
     </div>
   );
 }

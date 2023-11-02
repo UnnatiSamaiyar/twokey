@@ -1,23 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import axios from "axios";
 import { useAuth } from "../context/authContext";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import { supabase } from "../helper/supabaseClient";
 
 export default function QuickShare2({
   open,
   onClose,
   droppedFiles,
   handleRemoveFile,
-  handleFinalUpload,
 }) {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const { users } = useAuth();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   const handleRemoveUser = (index) => {
     const updatedUsers = [...selectedUsers];
@@ -25,10 +29,47 @@ export default function QuickShare2({
     setSelectedUsers(updatedUsers);
   };
 
-  console.log("selectedUsers:", selectedUsers);
+  const handleFinalUpload = async () => {
+    try {
+      for (const file of droppedFiles) {
+        const { data, error } = await supabase.storage
+          .from("TwoKey")
+          .upload(file.name, file, {
+            cacheControl: "3600",
+            upsert: false,
+          });
+
+        if (error) {
+          throw new Error("File upload failed");
+        }
+      }
+      showSnackbar("Upload successful", "success");
+    } catch (error) {
+      console.error("Error occurred in file upload:", error);
+      showSnackbar("Upload failed. Please try again.", "error");
+    }
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const showSnackbar = (message, severity) => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setSnackbarOpen(true);
+  };
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      PaperProps={{
+        style: {
+          borderRadius: "15px",
+        },
+      }}
+    >
       <DialogTitle>Quick Share</DialogTitle>
       <DialogContent className="bg-gray-100">
         <div className="w-80 py-4">
@@ -89,31 +130,6 @@ export default function QuickShare2({
               ))}
           </Select>
         </div>
-        {/* {selectedUsers.length > 0 && (
-          <div className="my-2">
-            <ul>
-              {selectedUsers.map((selectedUserId) => {
-                const selectedUser = users.find(
-                  (user) => user.id === selectedUserId
-                );
-                return (
-                  <li
-                    key={selectedUser.id}
-                    className="p-2 my-1 bg-white rounded-lg border shadow-md"
-                  >
-                    <p className="text-sm font-semibold">
-                      {selectedUser.email}
-                    </p>
-                    <p className="text-xs font-light text-gray-500">
-                      {selectedUser.email}
-                    </p>
-                    <button>X</button>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        )} */}
 
         {selectedUsers.length > 0 && (
           <div className="my-2">
@@ -125,7 +141,7 @@ export default function QuickShare2({
                 return (
                   <li
                     key={selectedUser.id}
-                    className="py-2 px-4 my-1 bg-white rounded-lg border shadow-md flex justify-between items-center "
+                    className="py-2 px-4 my-1 bg-white rounded-xl border shadow-md flex justify-between items-center "
                   >
                     <span>
                       <p className="text-sm font-semibold">
@@ -148,20 +164,33 @@ export default function QuickShare2({
           </div>
         )}
       </DialogContent>
-      <DialogActions>
+      <DialogActions style={{ margin: "5px" }}>
         <button
           onClick={onClose}
-          className="text-black border border-gray-300 py-1 px-3 rounded-md"
+          className="text-black border border-gray-300 py-1 px-3 rounded-lg"
         >
           Cancel
         </button>
         <button
           onClick={handleFinalUpload}
-          className="bg-blue-700 text-white py-1 px-3 rounded-md"
+          className="bg-blue-700 text-white py-1 px-3 rounded-lg"
         >
           Upload
         </button>
       </DialogActions>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <MuiAlert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </MuiAlert>
+      </Snackbar>
     </Dialog>
   );
 }
