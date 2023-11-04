@@ -23,7 +23,7 @@ const Dashboard = () => {
 
   return (
     <div
-      className={`p-4 h-full ${
+      className={`p-4 h-screen ${
         darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-800"
       }`}
     >

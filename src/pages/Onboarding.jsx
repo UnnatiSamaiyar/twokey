@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import MuiAccordion from "@mui/material/Accordion";
@@ -6,10 +7,15 @@ import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import { useDropzone } from "react-dropzone";
+import axios from "axios";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import { supabase } from "../helper/supabaseClient";
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
+  width: "60vw",
   border: `1px solid ${theme.palette.divider}`,
   "&:not(:last-child)": {
     borderBottom: 0,
@@ -52,6 +58,31 @@ const Onboarding = () => {
     lastName: "",
     profilePicture: null,
   });
+  const [isPictureSelected, setIsPictureSelected] = useState(false);
+  const [departmentList, setDepartmentList] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const depData = async () => {
+      try {
+        let token = JSON.parse(sessionStorage.getItem("token"));
+        const dep = await axios.get(
+          "https://twokeybackend.onrender.com/dept/list_depts/",
+          {
+            headers: {
+              Authorization: `Bearer ${token.session.access_token}`,
+            },
+          }
+        );
+        console.log("Departments:", dep.data);
+        setDepartmentList(dep.data);
+      } catch (error) {
+        console.log("Error fetching departments");
+      }
+    };
+
+    depData();
+  }, []);
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
@@ -64,22 +95,69 @@ const Onboarding = () => {
     });
   };
 
-  const handleProfilePictureChange = (e) => {
-    setFormData({
-      ...formData,
-      profilePicture: e.target.files[0],
-    });
+  const onDrop = (acceptedFiles) => {
+    if (acceptedFiles && acceptedFiles.length > 0) {
+      const file = acceptedFiles[0];
+      setFormData({
+        ...formData,
+        profilePicture: file,
+      });
+      setIsPictureSelected(true);
+    }
   };
 
-  const handleSubmit = (e) => {
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: "image/*",
+    onDrop,
+    maxFiles: 1,
+  });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    // You can send the formData to your server or perform further actions here.
+    console.log("formData", formData);
   };
 
-  const handleNextButtonClick = () => {
-    console.log(formData); // Log the formData when the "Next" button is clicked
-    // You can perform additional actions here.
+  const handleNextButtonClick = async () => {
+    console.log(formData);
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (error) throw error;
+
+      if (data) {
+        handleProfilePictureUpload();
+        sessionStorage.setItem("token", JSON.stringify(data));
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handleProfilePictureUpload = async () => {
+    try {
+      const { data, error } = await supabase.storage
+        .from("avatar")
+        .upload("testSuccess", formData.profilePicture, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      if (error) {
+        console.error("Error occurred in file upload:", error);
+      } else {
+        console.log("File uploaded successfully:", data);
+      }
+    } catch (error) {
+      console.error(
+        "An error occurred while uploading the profile picture:",
+        error
+      );
+    }
   };
 
   return (
@@ -89,7 +167,7 @@ const Onboarding = () => {
         <p className="text-lg text-gray-400 my-2">
           A secured file sharing platform for companies
         </p>
-        <form className="my-4 shadow-lg rounded-lg" onSubmit={handleSubmit}>
+        <form className="my-16 shadow-lg rounded-lg" onSubmit={handleSubmit}>
           <div>
             <Accordion
               expanded={expanded === "panel1"}
@@ -104,7 +182,7 @@ const Onboarding = () => {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails className="grid grid-cols-1 md:grid-cols-2 md:gap-4 text-left">
-                <div className="mb-4  ">
+                <div className="mb-4">
                   <label className="block text-gray-600 text-sm font-medium p-1">
                     Email *
                   </label>
@@ -116,7 +194,7 @@ const Onboarding = () => {
                     onChange={(e) => handleInputChange("email", e.target.value)}
                   />
                 </div>
-                <div className="mb-4 ">
+                <div className="mb-4">
                   <label className="block text-gray-600 text-sm font-medium p-1">
                     New Password *
                   </label>
@@ -152,13 +230,22 @@ const Onboarding = () => {
                     <label className="block text-gray-600 text-sm font-medium p-1">
                       Profile Picture
                     </label>
-                    <input
-                      type="file"
-                      className="block w-full border rounded-md py-2 px-3"
-                      accept="image/*"
-                      onChange={handleProfilePictureChange}
-                    />
-                  </div>{" "}
+                    {isPictureSelected ? (
+                      <img
+                        src={URL.createObjectURL(formData.profilePicture)}
+                        alt="Profile Pic"
+                        className="mt-2 max-h-40 max-w-full rounded-md"
+                      />
+                    ) : (
+                      <div
+                        {...getRootProps()}
+                        className="mt-2 h-28 w-32 hover:text-blue-400 flex items-center justify-center border-2 border-dashed hover:border-blue-400 border-gray-400 p-4 rounded-md text-center cursor-pointer"
+                      >
+                        <input {...getInputProps()} />
+                        <p>Drop files to upload</p>
+                      </div>
+                    )}
+                  </div>
                   <div></div>
                   <div className="mb-4">
                     <label className="block text-gray-600 text-sm font-medium p-1">
@@ -178,15 +265,30 @@ const Onboarding = () => {
                     <label className="block text-gray-600 text-sm font-medium p-1">
                       Department
                     </label>
-                    <input
-                      type="text"
-                      className="block w-full border rounded-md py-2 px-3"
-                      placeholder="Enter your department"
+
+                    <Select
+                      className="w-full bg-gray-100"
+                      labelId="demo-select-small-label"
+                      id="demo-select-small"
                       value={formData.department}
+                      label="Departments"
+                      name="Departments"
                       onChange={(e) =>
                         handleInputChange("department", e.target.value)
                       }
-                    />
+                      size="small"
+                    >
+                      <MenuItem value="None">
+                        <em>None</em>
+                      </MenuItem>
+
+                      {departmentList.length &&
+                        departmentList.map((item) => (
+                          <MenuItem key={item.id} value={item.id}>
+                            {item.name}
+                          </MenuItem>
+                        ))}
+                    </Select>
                   </div>
                   <div className="mb-4">
                     <label className="block text-gray-600 text-sm font-medium p-1">
@@ -227,8 +329,11 @@ const Onboarding = () => {
           TwoKey © 2023
         </Typography>
         <button
-          type="button"
-          onClick={handleNextButtonClick}
+          type="submit"
+          onClick={() => {
+            handleNextButtonClick();
+            // handleProfilePictureUpload();
+          }}
           className="rounded-md py-2 px-8 text-white bg-blue-700"
         >
           Next

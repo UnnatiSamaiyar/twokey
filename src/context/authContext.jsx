@@ -24,23 +24,23 @@ export const AuthProvider = ({ children }) => {
       console.log("Key pressed:", e.key);
 
       // check the data type of the clipboard item
-      navigator.clipboard.read().then((data) => {
-        const types = data[0].types;
-        let hasImageType = false;
+      // navigator.clipboard.read().then((data) => {
+      //   const types = data[0].types;
+      //   let hasImageType = false;
 
-        for (const type of types) {
-          if (type.startsWith("image")) {
-            hasImageType = true;
-            break;
-          }
-        }
+      //   for (const type of types) {
+      //     if (type.startsWith("image")) {
+      //       hasImageType = true;
+      //       break;
+      //     }
+      //   }
 
-        if (hasImageType) {
-          console.log("ScreenShot captured.");
-        } else {
-          console.log("Clipboard data does not contain an image type.");
-        }
-      });
+      //   if (hasImageType) {
+      //     console.log("ScreenShot captured.", types);
+      //   } else {
+      //     console.log("Clipboard data does not contain an image type.");
+      //   }
+      // });
     };
 
     document.addEventListener("keydown", handleKeyPress);

@@ -37,7 +37,7 @@ function SideBar() {
     location.pathname === "/onboarding";
 
   if (hideSideBar) {
-    return null; // Don't render the SideBar
+    return null;
   }
 
   let departments = [
@@ -51,7 +51,7 @@ function SideBar() {
 
   return (
     <nav
-      className={`h-screen flex flex-col justify-between w-1/6 p-4 bg-gray-50 border border-b-0 border-r-2 border-r-gray-200 ${
+      className={`h-auto flex flex-col justify-between p-4 bg-gray-50 border border-b-0 border-r-2 border-r-gray-200 ${
         darkMode ? "bg-gray-800" : "bg-white"
       }`}
     >
