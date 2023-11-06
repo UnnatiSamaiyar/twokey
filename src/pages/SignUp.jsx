@@ -4,6 +4,8 @@ import { supabase } from "../helper/supabaseClient";
 import { TextField } from "@mui/material";
 import axios from "axios";
 
+import ErrorPage from "../components/ErrorPage";
+
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -19,6 +21,7 @@ const SignUp = () => {
   });
 
   const [organizationData, setOrganizationData] = useState("");
+  const [pageErr, setPageErr] = useState(null);
 
   console.log(formData);
 
@@ -54,15 +57,31 @@ const SignUp = () => {
 
   useEffect(() => {
     const orgData = async () => {
-      const org = await axios.get(
-        "https://twokeybackend.onrender.com/org/list_orgs"
-      );
-      console.log(org.data);
-      setOrganizationData(org.data);
+      // catching the errors if the api call fails
+      // set the error message to page error state to be used for displaying error page.
+      try {
+        const org = await axios.get(
+          "https://twokeybackend.onrender.com/org/list_orgs"
+        );
+        console.log(org.data);
+        setOrganizationData(org.data);
+      } catch (error) {
+        const errMsg = error.message + "\n" + "Please try again later.";
+        alert(errMsg);
+        console.log(error.message);
+        setPageErr(errMsg);
+      }
     };
 
     orgData();
   }, []);
+  /**
+   * comment this out on dev mode
+   * as the api call fails from localhost
+   */
+  // if (pageErr) {
+  //   return <ErrorPage error={pageErr} />;
+  // }
 
   return (
     <div className="flex flex-col md:flex-row">
