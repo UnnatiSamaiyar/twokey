@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsIcon from "../assets/notification.svg";
@@ -9,6 +9,23 @@ import { useDarkMode } from "../context/darkModeContext";
 const TopBar = () => {
   const location = useLocation();
   const { darkMode, toggleDarkMode } = useDarkMode();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const hideTopBar =
     location.pathname === "/" ||
@@ -20,12 +37,11 @@ const TopBar = () => {
   }
 
   const topBarPath = location.pathname === "/dashboard";
-  let currentLocation = location.pathname;
 
   return (
     <nav
-      className={`h-[72px] w-full ${
-        darkMode ? "bg-gray-800" : "bg-white"
+      className={`topbar ${
+        scrolled ? "scrolled" : ""
       } border-b-2 p-1`}
     >
       <div className="container mx-auto flex items-center justify-between h-16 px-8">
