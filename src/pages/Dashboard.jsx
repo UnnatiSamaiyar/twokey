@@ -8,6 +8,8 @@ import { Dialog } from "@mui/material";
 import FileViewer from "../components/FileViewer";
 import { useAuth } from "../context/authContext";
 
+import ErrorPage from "../components/ErrorPage";
+
 let folders = [
   "Account",
   "Finance",
@@ -20,7 +22,9 @@ let folders = [
 const Dashboard = () => {
   const { darkMode } = useDarkMode();
   const { isFileViewerOpen, closeFileViewer, screenshotDetected } = useAuth();
-
+  if (!sessionStorage.getItem("token")) {
+    return <ErrorPage error="You are not authorised" />;
+  }
   return (
     <div
       className={`p-4 h-screen ${

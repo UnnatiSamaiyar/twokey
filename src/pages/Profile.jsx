@@ -5,6 +5,8 @@ import ProfilePersonalInfo from "../components/ProfilePersonalInfo";
 import ProfileWorkInformation from "../components/ProfileWorkInformation";
 import ProfileAddressInformation from "../components/ProfileAddressInformation";
 
+import ErrorPage from "../components/ErrorPage";
+
 const Profile = () => {
   const [picture, setPicture] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -73,7 +75,9 @@ const Profile = () => {
       );
     }
   };
-
+  if (!sessionStorage.getItem("token")) {
+    return <ErrorPage error="You are not authorised" />;
+  }
   return (
     <div className="p-4 w-full">
       <Paper
