@@ -18,6 +18,9 @@ const TopBar = () => {
   if (hideTopBar) {
     return null;
   }
+  if(!sessionStorage.getItem("token")) {
+    return null;
+  }
 
   const topBarPath = location.pathname === "/dashboard";
   let currentLocation = location.pathname;

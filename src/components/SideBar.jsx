@@ -5,6 +5,7 @@ import { useDarkMode } from "../context/darkModeContext";
 import { useAuth } from "../context/authContext";
 import { supabase } from "../helper/supabaseClient";
 
+
 function SideBar() {
   const location = useLocation();
 
@@ -68,6 +69,13 @@ function SideBar() {
     { name: "Sales", path: "/sales" },
     { name: "Human Resources", path: "/humanresources" },
   ];
+  /**
+   * If the user is unauthorised then no need to show the side panel.
+   * Feel free to delete if needed.
+   */
+  if (!sessionStorage.getItem("token")) {
+    return null;
+  }
 
   return (
     <nav
