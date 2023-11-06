@@ -28,6 +28,12 @@ const App = () => {
         <div className="w-full">
           <TopBar />
           <Routes>
+
+            {/* Enforces access control for wrapped routes. 
+                All The routes which are to be accessed by authorised user should be placed inside 
+                ProtectedRoute Wrapper.
+            */}
+
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/account" element={<Account />} />
@@ -35,6 +41,7 @@ const App = () => {
               <Route path="/profile" element={<Profile />} />
               <Route path="/test" element={<Test />} />
             </Route>
+            {/* Public Routes should goes below */}
             <Route path="/signup" element={<SignUp />} />
             <Route path="/" element={<Login />} exact />
           </Routes>
