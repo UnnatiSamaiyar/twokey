@@ -9,6 +9,8 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import SecurityAllocation from "./SecurityAllocation";
 
 export default function QuickShareSelectSecurityLevel({
   open,
@@ -18,10 +20,11 @@ export default function QuickShareSelectSecurityLevel({
   handleRemoveFile,
 }) {
   const [alignment, setAlignment] = useState("low");
+  const [securityAllotmentData, setsecurityAllotmentData] = useState("");
 
   const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
     "& .MuiToggleButtonGroup-grouped": {
-      margin: theme.spacing(0.2),
+      margin: theme.spacing(0.5),
       border: 0,
       "&.Mui-disabled": {
         border: 0,
@@ -45,6 +48,11 @@ export default function QuickShareSelectSecurityLevel({
     console.info("You clicked a breadcrumb.");
   }
 
+  function handleSecurityAllocation(data) {
+    setsecurityAllotmentData(data);
+    console.log(data);
+  }
+
   return (
     <Dialog
       open={open}
@@ -62,7 +70,7 @@ export default function QuickShareSelectSecurityLevel({
             {droppedFiles.map((file, index) => (
               <li
                 key={file.name}
-                className="text-xs bg-white border border-gray-200 border-b-2 border-b-green-600 rounded-md py-1 px-4 mb-1 flex items-center justify-between "
+                className="text-xs bg-white border border-gray-200 border-b-2 border-b-green-600 rounded-sm py-1 px-4 mb-1 flex items-center justify-between "
               >
                 <span>{file.name}</span>
                 <button
@@ -74,7 +82,43 @@ export default function QuickShareSelectSecurityLevel({
               </li>
             ))}
           </ul>
-          <p className="text-gray-600 text-sm font-semibold">Security Level</p>
+          <span className="my-4">
+            {" "}
+            <p className="text-gray-600 text-sm font-semibold">
+              Security Level
+            </p>
+            <ToggleButtonGroup
+              value={alignment}
+              exclusive
+              onChange={handleAlignment}
+              size="small"
+              className=" bg-slate-200 my-2 border-none"
+              style={{ border: "none" }}
+            >
+              <ToggleButton value="low">
+                <p className="capitalize">low</p>
+              </ToggleButton>
+              <ToggleButton value="moderate">
+                <p className="capitalize">moderate</p>
+              </ToggleButton>
+              <ToggleButton value="enhanced">
+                <p className="capitalize">enhanced</p>
+              </ToggleButton>
+              <ToggleButton value="high">
+                <p className="capitalize">high</p>
+              </ToggleButton>
+              <ToggleButton value="maximum">
+                <p className="capitalize">maximum</p>
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </span>
+
+          <div className="flex flex-row justify-start items-center gap-4 text-sm my-2">
+            <p className="bg-white px-2 py-1 rounded-lg border">All</p>
+            <p>Editors</p>
+            <p>Viewers</p>
+            <p>Download</p>
+          </div>
 
           <ul>
             {selectedUsers.map((user) => (
@@ -84,61 +128,9 @@ export default function QuickShareSelectSecurityLevel({
             ))}
           </ul>
 
-          {/* <ToggleButtonGroup
-            value={alignment}
-            exclusive
-            onChange={handleAlignment}
-            size="small"
-            className=" bg-slate-200 my-2 border-none"
-            style={{ border: "none" }}
-          >
-            <ToggleButton value="low">
-              <p className="capitalize">low</p>
-            </ToggleButton>
-            <ToggleButton value="moderate">
-              <p className="capitalize">moderate</p>
-            </ToggleButton>
-            <ToggleButton value="enhanced">
-              <p className="capitalize">enhanced</p>
-            </ToggleButton>
-            <ToggleButton value="high">
-              <p className="capitalize">high</p>
-            </ToggleButton>
-            <ToggleButton value="maximum">
-              <p className="capitalize">maximum</p>
-            </ToggleButton>
-          </ToggleButtonGroup> */}
-
-          <StyledToggleButtonGroup
-            size="small"
-            value={alignment}
-            exclusive
-            onChange={handleAlignment}
-            aria-label="text alignment"
-            sx={{ backgroundColor: "#E9EDF5" }}
-          >
-            <ToggleButton value="low">
-              <p className="capitalize">low</p>
-            </ToggleButton>
-
-            <Divider flexItem orientation="vertical" sx={{ mx: 0.5, my: 1 }} />
-            <Divider flexItem orientation="vertical" sx={{ mx: 0.5, my: 1 }} />
-            <ToggleButton value="moderate">
-              <p className="capitalize">moderate</p>
-            </ToggleButton>
-            <Divider flexItem orientation="vertical" sx={{ mx: 0.5, my: 1 }} />
-            <ToggleButton value="enhanced">
-              <p className="capitalize">enhanced</p>
-            </ToggleButton>
-            <Divider flexItem orientation="vertical" sx={{ mx: 0.5, my: 1 }} />
-            <ToggleButton value="high">
-              <p className="capitalize">high</p>
-            </ToggleButton>
-            <Divider flexItem orientation="vertical" sx={{ mx: 0.5, my: 1 }} />
-            <ToggleButton value="maximum">
-              <p className="capitalize">maximum</p>
-            </ToggleButton>
-          </StyledToggleButtonGroup>
+          <SecurityAllocation
+            handleSecurityAllocation={handleSecurityAllocation}
+          />
         </div>
       </DialogContent>
       <DialogActions style={{ margin: "5px" }}>
@@ -150,6 +142,7 @@ export default function QuickShareSelectSecurityLevel({
         </button>
         <button
           //   onClick={handleUploadClick}
+          onClick={() => console.log(securityAllotmentData)}
           className="bg-blue-700 text-white py-1 px-3 rounded-lg"
         >
           Upload
