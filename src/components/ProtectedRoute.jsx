@@ -12,28 +12,23 @@ import Loading from "./Loading";
  * @returns {JSX.Element} The rendered JSX element, either the route content or a redirection to the login/home page.
  */
 export function ProtectedRoute() {
-  const {token, error} = useAuth();
-	const location = useLocation();
-	const [isLoading, setIsLoading] = useState(true);
-	const [isAuthenticated, setIsAuthenticated] = useState(false);
-  console.log("eror", error);
+  const location = useLocation();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-	useEffect(() => {
-		const sessionToken = sessionStorage.getItem("token");
-		if (sessionToken) {
-			setIsAuthenticated(true);
-		}
-		setIsLoading(false);
-	}, []);
+  useEffect(() => {
+    const sessionToken = sessionStorage.getItem("token");
+    if (sessionToken) {
+      setIsAuthenticated(true);
+    }
+    setIsLoading(false);
+  }, []);
 
-	if (isLoading) {
-		console.log("retuning");
-		return <Loading />;
-	}
-  if(!isAuthenticated) {
-    return <Navigate to={"/"} replace state={{ path: location.pathname }} />
-
+  if (isLoading) {
+    return <Loading />;
   }
-	return <Outlet />
-	
+  if (!isAuthenticated) {
+    return <Navigate to={"/"} replace state={{ path: location.pathname }} />;
+  }
+  return <Outlet />;
 }
