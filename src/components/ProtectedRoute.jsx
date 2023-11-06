@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState, useEffect } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../context/authContext";
+import Loading from "./Loading";
 
 /**
  * ProtectedRoute is a component that enforces access control for routes.
@@ -8,19 +9,31 @@ import { useAuth } from "../context/authContext";
  * If a user is authenticated (has a valid token), the component renders the route content.
  * If the user is not authenticated, they are redirected to the login page.
  *
- * @component
- * @param {Object} props - The props for the ProtectedRoute component.
- * @param {React.Component} props.component - The component to be rendered if the user is authenticated.
  * @returns {JSX.Element} The rendered JSX element, either the route content or a redirection to the login/home page.
  */
-export function ProtectedRoute({ component: Component, ...rest }) {
-  const { token } = useAuth();
-  const location = useLocation();
+export function ProtectedRoute() {
+  const {token, error} = useAuth();
+	const location = useLocation();
+	const [isLoading, setIsLoading] = useState(true);
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
+  console.log("eror", error);
 
-  return token ? (
-    <Outlet />
-  ) : (
-    <Navigate to={"/"} replace state={{ path: location.pathname }} />
-  );
+	useEffect(() => {
+		const sessionToken = sessionStorage.getItem("token");
+		if (sessionToken) {
+			setIsAuthenticated(true);
+		}
+		setIsLoading(false);
+	}, []);
+
+	if (isLoading) {
+		console.log("retuning");
+		return <Loading />;
+	}
+  if(!isAuthenticated) {
+    return <Navigate to={"/"} replace state={{ path: location.pathname }} />
+
+  }
+	return <Outlet />
+	
 }
-export default ProtectedRoute
