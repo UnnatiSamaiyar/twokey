@@ -159,7 +159,7 @@ export const AuthProvider = ({ children }) => {
           },
         }
       );
-      // console.log("users :", userList.data);
+      console.log("users :", userList.data);
       setUsers(userList.data);
     } catch (error) {
       console.log(error);

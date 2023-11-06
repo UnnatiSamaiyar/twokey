@@ -5,7 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useDropzone } from "react-dropzone";
-import QuickShare2 from "./QuickShare2";
+import QuickShareSelectReceivers from "./QuickShareSelectReceivers";
 import { useAuth } from "../context/authContext";
 
 export default function QuickShare() {
@@ -105,7 +105,7 @@ export default function QuickShare() {
                 {droppedFiles.map((file, index) => (
                   <li
                     key={file.name}
-                    className="text-xs bg-white border border-gray-200 rounded-md py-2 px-4 mb-1 flex items-center justify-between"
+                    className="text-xs bg-white border border-gray-200 border-b-2 border-b-green-600 rounded-md py-2 px-4 mb-1 flex items-center justify-between"
                   >
                     <span>{file.name}</span>
                     <button
@@ -138,7 +138,7 @@ export default function QuickShare() {
           </button>
         </DialogActions>
       </Dialog>
-      <QuickShare2
+      <QuickShareSelectReceivers
         open={reviewOpen}
         onClose={() => setReviewOpen(false)}
         droppedFiles={droppedFiles}
