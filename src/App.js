@@ -11,6 +11,7 @@ import Test from "./pages/Test";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useAuth } from "./context/authContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   const { token } = useAuth();
@@ -27,11 +28,13 @@ const App = () => {
         <div className="w-full">
           <TopBar />
           <Routes>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/test" element={<Test />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/onboarding" element={<Onboarding />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/test" element={<Test />} />
+            </Route>
             <Route path="/signup" element={<SignUp />} />
             <Route path="/" element={<Login />} exact />
           </Routes>
