@@ -3,6 +3,8 @@ import { useAuth } from "../context/authContext";
 import axios from "axios";
 import { supabase } from "../helper/supabaseClient";
 
+import ErrorPage from "../components/ErrorPage";
+
 const Test = () => {
   const { token, location, error, getGeolocation } = useAuth();
   const [picture, setPicture] = useState(null);
@@ -82,7 +84,9 @@ const Test = () => {
       console.log("Error while getting ProfilePic.");
     }
   };
-
+  if (!sessionStorage.getItem("token")) {
+    return <ErrorPage error="You are not authorised" />;
+  }
   return (
     <div className="flex flex-col justify-center items-center">
       <p>Profile</p>
