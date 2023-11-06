@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ProfilePic from "../assets/profilePic.png";
 import { useDarkMode } from "../context/darkModeContext";
 import { useAuth } from "../context/authContext";
+import { supabase } from "../helper/supabaseClient";
 
 function SideBar() {
   const location = useLocation();
@@ -10,6 +11,25 @@ function SideBar() {
   const [data, setData] = useState("");
   const { darkMode } = useDarkMode();
   let navigate = useNavigate();
+  const [picture, setPicture] = useState(null);
+
+  useEffect(() => {
+    const getProfilePic = async () => {
+      try {
+        const { data } = supabase.storage
+          .from("avatar")
+          .getPublicUrl("onlyforsave1@gmail.com");
+
+        setPicture(data.publicUrl);
+
+        // console.log(data.publicUrl);
+      } catch (error) {
+        console.log("Error while getting ProfilePic.");
+      }
+    };
+
+    getProfilePic();
+  }, []);
 
   function handleLogout() {
     navigate("/");
@@ -22,7 +42,7 @@ function SideBar() {
         let token = JSON.parse(sessionStorage.getItem("token"));
         setData(token.user.user_metadata.full_name);
 
-        console.log("sidebar token :", token.user.user_metadata.full_name);
+        // console.log("sidebar token :", token.user.user_metadata.full_name);
       } catch (error) {
         console.log("Error while fetching the user profile data.");
       }
@@ -51,7 +71,7 @@ function SideBar() {
 
   return (
     <nav
-      className={`h-auto flex flex-col justify-between p-4 bg-gray-50 border border-b-0 border-r-2 border-r-gray-200 ${
+      className={`h-auto flex flex-col justify-between p-4 bg-gray-100 border border-b-0 border-r-2 border-r-gray-200 ${
         darkMode ? "bg-gray-800" : "bg-white"
       }`}
     >
@@ -137,7 +157,7 @@ function SideBar() {
             <button
               onClick={handleLogout}
               className={
-                location.pathname === "/settings"
+                location.pathname === "#"
                   ? "hover-bg-gray-100 py-1.5 px-4 rounded-md bg-gray-200 text-sm"
                   : "hover-bg-gray-100 py-1.5 px-4 rounded-md text-sm"
               }
@@ -158,10 +178,10 @@ function SideBar() {
               } flex flex-row gap-2`}
             >
               <img
-                src={ProfilePic}
+                src={picture ? picture : ProfilePic}
                 alt="ProfilePic"
                 className={`w-6 h-6 rounded-full ${
-                  darkMode ? "filter brightness-200 border border-white" : ""
+                  darkMode ? "filter brightness-100 border border-white" : ""
                 }`}
               />
               #{data ? data : "Profile"}

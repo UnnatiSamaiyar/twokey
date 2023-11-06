@@ -15,11 +15,16 @@ import { useAuth } from "./context/authContext";
 const App = () => {
   const { token } = useAuth();
 
+  const hideGrid =
+    window.location.pathname === "/" ||
+    window.location.pathname === "/signup" ||
+    window.location.pathname === "/onboarding";
+
   return (
     <Router>
-      <div className="grid grid-cols-6">
+      <div className="flex">
         <SideBar />
-        <div className="col-span-5 ">
+        <div className="w-full">
           <TopBar />
           <Routes>
             <Route path="/dashboard" element={<Dashboard />} />

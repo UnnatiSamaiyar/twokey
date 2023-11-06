@@ -29,10 +29,14 @@ const TopBar = () => {
       } border-b-2 p-1`}
     >
       <div className="container mx-auto flex items-center justify-between h-16 px-8">
-        <p className={`${darkMode ? "text-gray-300" : "text-gray-800"} `}>
+        <p
+          className={`${
+            darkMode ? "text-gray-300" : "text-gray-800"
+          } capitalize`}
+        >
           {topBarPath
             ? "Overview / Dashboard"
-            : `Department  ${location.pathname}`}
+            : `${location.pathname}`.slice(1)}
         </p>
         <div className="flex justify-between gap-8">
           <div className="relative w-96">

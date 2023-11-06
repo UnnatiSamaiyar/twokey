@@ -32,6 +32,27 @@ const Test = () => {
   //   }
   // };
 
+  // const handleFinalUpload = async () => {
+  //   try {
+  //     for (const file of droppedFiles) {
+  //       const { data, error } = await supabase.storage
+  //         .from("TwoKey")
+  //         .upload(file.name, file, {
+  //           cacheControl: "3600",
+  //           upsert: false,
+  //         });
+
+  //       if (error) {
+  //         throw new Error("File upload failed");
+  //       }
+  //     }
+  //     showSnackbar("Upload successful", "success");
+  //   } catch (error) {
+  //     console.error("Error occurred in file upload:", error);
+  //     showSnackbar("Upload failed. Please try again.", "error");
+  //   }
+  // };
+
   const listUsers = async () => {
     try {
       const users = await axios.get(

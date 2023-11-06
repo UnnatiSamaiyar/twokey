@@ -117,6 +117,33 @@ const Onboarding = () => {
     console.log("formData", formData);
   };
 
+  // const handleNextButtonClick = async () => {
+  //   console.log(formData);
+
+  //   try {
+  //     const { data, error } = await supabase.auth.signInWithPassword({
+  //       email: formData.email,
+  //       password: formData.password,
+  //     });
+
+  //     if (error) throw error;
+
+  //     if (data) {
+  //       const { data, error } = await supabase
+  //         .from("user_info")
+  //         .update({ other_column: "otherValue" })
+  //         .eq("some_column", "someValue")
+  //         .select();
+
+  //       handleProfilePictureUpload();
+  //       sessionStorage.setItem("token", JSON.stringify(data));
+  //       navigate("/dashboard");
+  //     }
+  //   } catch (error) {
+  //     alert(error.message);
+  //   }
+  // };
+
   const handleNextButtonClick = async () => {
     console.log(formData);
 
@@ -129,9 +156,26 @@ const Onboarding = () => {
       if (error) throw error;
 
       if (data) {
-        handleProfilePictureUpload();
-        sessionStorage.setItem("token", JSON.stringify(data));
-        navigate("/dashboard");
+        // Update user_info with firm data
+        const { data: userData, error: updateError } = await supabase
+          .from("user_info")
+          .update({
+            username: formData.username,
+            department: formData.department,
+            firstname: formData.firstName,
+            lastname: formData.lastName,
+          })
+          .eq("id", data.user.id)
+          .single();
+
+        if (updateError) {
+          console.error("Error updating user_info:", updateError);
+        } else {
+          console.log("User info updated successfully:", userData);
+          handleProfilePictureUpload();
+          sessionStorage.setItem("token", JSON.stringify(data));
+          navigate("/dashboard");
+        }
       }
     } catch (error) {
       alert(error.message);
