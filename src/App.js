@@ -11,6 +11,7 @@ import Test from "./pages/Test";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useAuth } from "./context/authContext";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const App = () => {
   const { token } = useAuth();
@@ -19,6 +20,7 @@ const App = () => {
     window.location.pathname === "/" ||
     window.location.pathname === "/signup" ||
     window.location.pathname === "/onboarding";
+  console.log("token", token);
 
   return (
     <Router>
@@ -27,11 +29,19 @@ const App = () => {
         <div className="w-full">
           <TopBar />
           <Routes>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/account" element={<Account />} />
+            {/* Enforces access control for wrapped routes. 
+                All The routes which are to be accessed by authorised user should be placed inside 
+                ProtectedRoute Wrapper.
+            */}
+
+            <Route element={<ProtectedRoute />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/test" element={<Test />} />
+            </Route>
+            {/* Public Routes should goes below */}
             <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/test" element={<Test />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/" element={<Login />} exact />
           </Routes>
