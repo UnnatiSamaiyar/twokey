@@ -15,21 +15,14 @@ const TopBar = () => {
     location.pathname === "/signup" ||
     location.pathname === "/onboarding";
 
-  if (hideTopBar) {
-    return null;
-  }
-  if(!sessionStorage.getItem("token")) {
-    return null;
-  }
-
   const topBarPath = location.pathname === "/dashboard";
   let currentLocation = location.pathname;
 
   return (
     <nav
-      className={`h-[72px] w-full ${
-        darkMode ? "bg-gray-800" : "bg-white"
-      } border-b-2 p-1`}
+      className={`w-full p-1 fixed top-0 ${
+        darkMode ? "bg-opacity-70 backdrop-blur-lg bg-gray-800" : "bg-opacity-70 backdrop-blur-lg bg-white"
+      } border-b-2 p-1 z-50`}
     >
       <div className="container mx-auto flex items-center justify-between h-16 px-8">
         <p
@@ -56,7 +49,7 @@ const TopBar = () => {
               type="search"
               placeholder="Search"
               className={`w-full p-1 pl-12 ${
-                darkMode ? "bg-gray-700" : "bg-gray-100"
+                darkMode ? "bg-opacity-70 backdrop-blur-lg bg-gray-700" : "bg-opacity-70 backdrop-blur-lg bg-gray-100"
               } rounded-md text-white`}
             ></input>
           </div>
@@ -80,3 +73,4 @@ const TopBar = () => {
 };
 
 export default TopBar;
+ 
