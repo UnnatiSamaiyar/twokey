@@ -12,6 +12,7 @@ import Test from "./pages/Test";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useAuth } from "./context/authContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import ErrorPage from "./components/ErrorPage";
 
 const App = () => {
   const { token } = useAuth();
@@ -44,6 +45,10 @@ const App = () => {
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/" element={<Login />} exact />
+            <Route
+              path="/*"
+              element={<ErrorPage error={"We could not find that page."} />}
+            />
           </Routes>
         </div>
       </div>
