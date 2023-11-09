@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useAuth } from "../context/authContext";
 
-const ProfileAddressInformation = () => {
+const ProfileAddressInformation = ({ profileData }) => {
   const [isEditing, setIsEditing] = useState(false);
+  // const { profileData } = useAuth();
 
   const toggleEditing = () => {
     setIsEditing(!isEditing);
@@ -18,7 +20,9 @@ const ProfileAddressInformation = () => {
               className={`text-md  placeholder-gray-500 p-2 rounded-md ${
                 isEditing ? "bg-white shadow-lg border" : "bg-inherit"
               }`}
-              placeholder="Country"
+              placeholder={
+                profileData.country ? profileData.country : "Country"
+              }
               disabled={!isEditing}
             />
           </span>
@@ -28,7 +32,7 @@ const ProfileAddressInformation = () => {
               className={`text-md  placeholder-gray-500 p-2 rounded-md ${
                 isEditing ? "bg-white shadow-lg border" : "bg-inherit"
               }`}
-              placeholder="State"
+              placeholder={profileData.state ? profileData.state : "State"}
               disabled={!isEditing}
             />
           </span>
@@ -38,7 +42,7 @@ const ProfileAddressInformation = () => {
               className={`text-md  placeholder-gray-500 p-2 rounded-md ${
                 isEditing ? "bg-white shadow-lg border" : "bg-inherit"
               }`}
-              placeholder="City"
+              placeholder={profileData.city ? profileData.city : "City"}
               disabled={!isEditing}
             />
           </span>
@@ -48,7 +52,11 @@ const ProfileAddressInformation = () => {
               className={`text-md  placeholder-gray-500 p-2 rounded-md ${
                 isEditing ? "bg-white shadow-lg border" : "bg-inherit"
               }`}
-              placeholder="Postal Code"
+              placeholder={
+                profileData.postal_code
+                  ? profileData.postal_code
+                  : "Postal Code"
+              }
               disabled={!isEditing}
             />
           </span>

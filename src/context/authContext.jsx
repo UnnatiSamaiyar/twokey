@@ -108,6 +108,31 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  useEffect(() => {
+    const getProfileData = async () => {
+      try {
+        let token = JSON.parse(sessionStorage.getItem("token"));
+
+        if (token) {
+          const res = await axios.get(
+            "https://twokeybackend.onrender.com/users/getProfileInfo/",
+            {
+              headers: {
+                Authorization: `Bearer ${token.session.access_token}`,
+              },
+            }
+          );
+
+          // console.log("Profile data:", res.data);
+          localStorage.setItem("profileData", JSON.stringify(res.data));
+        }
+      } catch (error) {
+        console.log("error occured while fetching profile data", error);
+      }
+    };
+    getProfileData();
+  }, [token]);
+
   const setSessionToken = (newToken) => {
     setToken(newToken);
     sessionStorage.setItem("token", JSON.stringify(newToken));

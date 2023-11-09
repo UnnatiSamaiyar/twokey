@@ -5,7 +5,6 @@ import { useDarkMode } from "../context/darkModeContext";
 import { useAuth } from "../context/authContext";
 import { supabase } from "../helper/supabaseClient";
 
-
 function SideBar() {
   const location = useLocation();
 
@@ -79,7 +78,7 @@ function SideBar() {
 
   return (
     <nav
-      className={`h-auto flex flex-col justify-between p-4 bg-gray-100 border border-b-0 border-r-2 border-r-gray-200 ${
+      className={`h-auto w-56 flex flex-col justify-between p-4 bg-gray-100 border border-b-0 border-r-2 border-r-gray-200 ${
         darkMode ? "bg-gray-800" : "bg-white"
       }`}
     >

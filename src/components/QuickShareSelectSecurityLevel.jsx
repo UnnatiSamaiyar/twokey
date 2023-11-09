@@ -5,12 +5,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Stack from "@mui/material/Stack";
-import Divider from "@mui/material/Divider";
-import { styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
+import axios from "axios";
 import SecurityAllocation from "./SecurityAllocation";
+import { supabase } from "../helper/supabaseClient";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 export default function QuickShareSelectSecurityLevel({
   open,
@@ -20,38 +19,102 @@ export default function QuickShareSelectSecurityLevel({
   handleRemoveFile,
 }) {
   const [alignment, setAlignment] = useState("low");
-  const [securityAllotmentData, setsecurityAllotmentData] = useState("");
+  const [securityAllotmentData, setSecurityAllotmentData] = useState("");
 
-  const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
-    "& .MuiToggleButtonGroup-grouped": {
-      margin: theme.spacing(0.5),
-      border: 0,
-      "&.Mui-disabled": {
-        border: 0,
-      },
-      "&:not(:first-of-type)": {
-        borderRadius: theme.shape.borderRadius,
-      },
-      "&:first-of-type": {
-        borderRadius: theme.shape.borderRadius,
-      },
-    },
-  }));
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   const handleAlignment = (event, newAlignment) => {
     setAlignment(newAlignment);
     console.log(newAlignment);
   };
 
-  function handleClick(event) {
-    event.preventDefault();
-    console.info("You clicked a breadcrumb.");
-  }
+  const handleFinalUpload = async () => {
+    try {
+      for (const file of droppedFiles) {
+        const { data, error } = await supabase.storage
+          .from("TwoKey")
+          .upload(file.name, file, {
+            cacheControl: "3600",
+            upsert: false,
+          });
+        console.log("uploaded file:", data.path);
+        handleFileIdRetrieval(data.path);
+
+        if (error) {
+          throw new Error("File upload failed");
+        }
+      }
+
+      showSnackbar("Upload successful", "success");
+    } catch (error) {
+      console.error("Error occurred in file upload:", error);
+
+      showSnackbar("Upload failed. Please try again.", "error");
+    }
+  };
+
+  const handleFileIdRetrieval = async (desiredFileName) => {
+    try {
+      const { data, error } = await supabase.storage.from("TwoKey").list();
+
+      if (data && data.length > 0) {
+        const file = data.find((item) => item.name === desiredFileName);
+
+        if (file) {
+          console.log("Object id found:", file.id);
+          shareFiles(file.id);
+        } else {
+          console.log(`Object with name "${desiredFileName}" not found.`);
+        }
+      } else {
+        console.log("No objects found in the 'TwoKey' bucket.");
+      }
+    } catch (error) {
+      console.log("Error occurred while retrieving the file list:", error);
+    }
+  };
+
+  const shareFiles = async (fileId) => {
+    try {
+      let token = JSON.parse(sessionStorage.getItem("token"));
+
+      const res = await axios.post(
+        "https://twokeybackend.onrender.com/file/shareFile/",
+        {
+          file: [fileId],
+          shared_with: ["3f53d0fc-e1a2-40de-bdca-ec082ca11d9c"],
+          expiration_time: 5,
+          security_check: {},
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token.session.access_token}`,
+          },
+        }
+      );
+
+      console.log("shareFiles:", res);
+    } catch (error) {
+      console.log("error occured while setting the permissions", error);
+    }
+  };
 
   function handleSecurityAllocation(data) {
-    setsecurityAllotmentData(data);
-    console.log(data);
+    setSecurityAllotmentData(data);
+    // console.log(data);
   }
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const showSnackbar = (message, severity) => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setSnackbarOpen(true);
+  };
 
   return (
     <Dialog
@@ -120,16 +183,9 @@ export default function QuickShareSelectSecurityLevel({
             <p>Download</p>
           </div>
 
-          <ul>
-            {selectedUsers.map((user) => (
-              <li key={user.id}>
-                <p>{user.email}</p>
-              </li>
-            ))}
-          </ul>
-
           <SecurityAllocation
             handleSecurityAllocation={handleSecurityAllocation}
+            selectedUsers={selectedUsers}
           />
         </div>
       </DialogContent>
@@ -141,13 +197,28 @@ export default function QuickShareSelectSecurityLevel({
           Cancel
         </button>
         <button
-          //   onClick={handleUploadClick}
+          // onClick={handleFinalUpload}
           onClick={() => console.log(securityAllotmentData)}
+          //   onClick={shareFiles}
+          //   onClick={handleFileIdRetrieval}
           className="bg-blue-700 text-white py-1 px-3 rounded-lg"
         >
           Upload
         </button>
       </DialogActions>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <MuiAlert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </MuiAlert>
+      </Snackbar>
     </Dialog>
   );
 }

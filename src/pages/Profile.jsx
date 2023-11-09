@@ -4,6 +4,8 @@ import Paper from "@mui/material/Paper";
 import ProfilePersonalInfo from "../components/ProfilePersonalInfo";
 import ProfileWorkInformation from "../components/ProfileWorkInformation";
 import ProfileAddressInformation from "../components/ProfileAddressInformation";
+import axios from "axios";
+import { useAuth } from "../context/authContext";
 
 import ErrorPage from "../components/ErrorPage";
 
@@ -11,8 +13,14 @@ const Profile = () => {
   const [picture, setPicture] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedPicture, setSelectedPicture] = useState(null);
-
+  const [profileData, setProfileData] = useState({});
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    let data = localStorage.getItem("profileData");
+    setProfileData(JSON.parse(data));
+    console.log("local profile", JSON.parse(data));
+  }, []);
 
   useEffect(() => {
     let token = JSON.parse(sessionStorage.getItem("token"));
@@ -78,6 +86,7 @@ const Profile = () => {
   if (!sessionStorage.getItem("token")) {
     return <ErrorPage error="You are not authorised" />;
   }
+
   return (
     <div className="p-4 w-full">
       <Paper
@@ -105,9 +114,16 @@ const Profile = () => {
               </div>
             )}
             <div className="flex flex-col leading-9">
-              <h3 className="text-lg font-semibold">Username</h3>
-              <h5 className="text-md font-semibold text-gray-700">Position</h5>
-              <p className="text-sm text-gray-500">Address</p>
+              <h3 className="text-lg font-semibold">
+                {profileData.username ? `#${profileData.username}` : "UserName"}
+              </h3>
+              <h5 className="text-md font-semibold text-gray-700">
+                {profileData.role_priv ? profileData.role_priv : "Position"}
+              </h5>
+              <p className="text-sm text-gray-500">
+                {profileData.country ? profileData.country : "Country"}
+              </p>
+              {/* <button onClick={getProfileData}>getProfileData</button> */}
             </div>
           </div>
 
@@ -120,9 +136,9 @@ const Profile = () => {
             {isEditing ? "Save" : "Edit"}
           </button>
         </div>
-        <ProfilePersonalInfo />
-        <ProfileWorkInformation />
-        <ProfileAddressInformation />
+        <ProfilePersonalInfo profileData={profileData} />
+        <ProfileWorkInformation profileData={profileData} />
+        <ProfileAddressInformation profileData={profileData} />
 
         {/* Hidden input for image upload */}
         <input

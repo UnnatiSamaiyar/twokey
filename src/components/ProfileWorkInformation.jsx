@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useAuth } from "../context/authContext";
 
-const ProfileWorkInformation = () => {
+const ProfileWorkInformation = ({ profileData }) => {
   const [isEditing, setIsEditing] = useState(false);
+  // const { profileData } = useAuth();
 
   const toggleEditing = () => {
     setIsEditing(!isEditing);
@@ -18,7 +20,9 @@ const ProfileWorkInformation = () => {
               className={`text-md  placeholder-gray-500 p-2 rounded-md ${
                 isEditing ? "bg-white shadow-lg border" : "bg-inherit"
               }`}
-              placeholder="Designation"
+              placeholder={
+                profileData.role_priv ? profileData.role_priv : "Designation"
+              }
               disabled={!isEditing}
             />
           </span>
@@ -28,7 +32,7 @@ const ProfileWorkInformation = () => {
               className={`text-md  placeholder-gray-500 p-2 rounded-md ${
                 isEditing ? "bg-white shadow-lg border" : "bg-inherit"
               }`}
-              placeholder="Department"
+              placeholder={profileData.dept ? profileData.dept : "Department"}
               disabled={!isEditing}
             />
           </span>
@@ -38,7 +42,9 @@ const ProfileWorkInformation = () => {
               className={`text-md  placeholder-gray-500 p-2 rounded-md ${
                 isEditing ? "bg-white shadow-lg border" : "bg-inherit"
               }`}
-              placeholder="Manager"
+              placeholder={
+                profileData.manager ? profileData.manager : "Manager"
+              }
               disabled={!isEditing}
             />
           </span>

@@ -7,8 +7,6 @@ import { useAuth } from "../context/authContext";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
 import QuickShareSelectSecurityLevel from "./QuickShareSelectSecurityLevel";
 
 export default function QuickShareSelectReceivers({
@@ -19,9 +17,6 @@ export default function QuickShareSelectReceivers({
 }) {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const { users } = useAuth();
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [securityLevelOpen, setSecurityLevelOpen] = useState(false);
 
   const addUserToSelectedUsers = (user) => {
@@ -33,16 +28,6 @@ export default function QuickShareSelectReceivers({
     const updatedUsers = [...selectedUsers];
     updatedUsers.splice(index, 1);
     setSelectedUsers(updatedUsers);
-  };
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
-
-  const showSnackbar = (message, severity) => {
-    setSnackbarMessage(message);
-    setSnackbarSeverity(severity);
-    setSnackbarOpen(true);
   };
 
   const handleUploadClick = () => {
@@ -169,19 +154,6 @@ export default function QuickShareSelectReceivers({
             Upload
           </button>
         </DialogActions>
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={6000}
-          onClose={handleSnackbarClose}
-        >
-          <MuiAlert
-            onClose={handleSnackbarClose}
-            severity={snackbarSeverity}
-            sx={{ width: "100%" }}
-          >
-            {snackbarMessage}
-          </MuiAlert>
-        </Snackbar>
       </Dialog>
 
       {securityLevelOpen && (

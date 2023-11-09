@@ -74,7 +74,7 @@ export default function QuickShare() {
         <DialogTitle>Quick Share</DialogTitle>
         <DialogContent className="p-4 bg-gray-100">
           <DialogContentText></DialogContentText>
-          {/* <p className="text-sm font-semibold mt-2">
+          <p className="text-sm font-semibold mt-2">
             File name<span className="text-blue-800 ml-1">*</span>
           </p>
           <input
@@ -83,7 +83,7 @@ export default function QuickShare() {
             onChange={handleFileNameChange}
             className="w-full py-1 px-2 my-2 border border-gray-200 rounded-md"
             required
-          /> */}
+          />
           <div
             {...getRootProps()}
             className={`mt-2 h-64 w-80 flex items-center justify-center border-2 border-dashed border-gray-400 p-4 rounded-md text-center cursor-pointer ${

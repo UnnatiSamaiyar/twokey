@@ -18,7 +18,7 @@ const TopBar = () => {
   if (hideTopBar) {
     return null;
   }
-  if(!sessionStorage.getItem("token")) {
+  if (!sessionStorage.getItem("token")) {
     return null;
   }
 

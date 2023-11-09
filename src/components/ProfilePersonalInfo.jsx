@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useAuth } from "../context/authContext";
 
-const ProfilePersonalInfo = () => {
+const ProfilePersonalInfo = ({ profileData }) => {
   const [isEditing, setIsEditing] = useState(false);
+  // const { profileData } = useAuth();
 
   const toggleEditing = () => {
     setIsEditing(!isEditing);
@@ -18,7 +20,7 @@ const ProfilePersonalInfo = () => {
               className={`text-md  placeholder-gray-500 p-2 rounded-md ${
                 isEditing ? "bg-white shadow-lg border" : "bg-inherit"
               }`}
-              placeholder="First Name"
+              placeholder={profileData.name ? profileData.name : "First Name"}
               disabled={!isEditing}
             />
           </span>
@@ -28,7 +30,9 @@ const ProfilePersonalInfo = () => {
               className={`text-md  placeholder-gray-500 p-2 rounded-md ${
                 isEditing ? "bg-white shadow-lg border" : "bg-inherit"
               }`}
-              placeholder="Last Name"
+              placeholder={
+                profileData.last_name ? profileData.last_name : "Last Name"
+              }
               disabled={!isEditing}
             />
           </span>
@@ -38,7 +42,9 @@ const ProfilePersonalInfo = () => {
               className={`text-md  placeholder-gray-500 p-2 rounded-md ${
                 isEditing ? "bg-white shadow-lg border" : "bg-inherit"
               }`}
-              placeholder="Email Address"
+              placeholder={
+                profileData.email ? profileData.email : "Email Address"
+              }
               disabled={!isEditing}
             />
           </span>
@@ -48,7 +54,7 @@ const ProfilePersonalInfo = () => {
               className={`text-md  placeholder-gray-500 p-2 rounded-md ${
                 isEditing ? "bg-white shadow-lg border" : "bg-inherit"
               }`}
-              placeholder="Phone Number"
+              placeholder={profileData.phone ? profileData.phone : "9876543210"}
               disabled={!isEditing}
             />
           </span>
