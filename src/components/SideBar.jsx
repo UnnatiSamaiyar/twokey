@@ -10,6 +10,7 @@ import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import { departmentIcons } from "../utils/iconComponents";
 import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
 import ExitToAppRoundedIcon from "@mui/icons-material/ExitToAppRounded";
+import MenuIcon from "@mui/icons-material/MenuRounded";
 
 function SideBar() {
   const location = useLocation();
@@ -79,27 +80,36 @@ function SideBar() {
    * If the user is unauthorised then no need to show the side panel.
    * Feel free to delete if needed.
    */
-  console.log(darkMode);
+  const toggleMenu = () => {
+    console.log(isMenuOpen, "ismenuopen");
+    setIsMenuOpen(!isMenuOpen);
+  };
   if (!sessionStorage.getItem("token")) {
     return null;
   }
 
   return (
     <nav
-      className={`h-auto hidden  md:w-56 lg:w-60 md:flex flex-col justify-between p-4 bg-gray-100 border border-b-0 border-r-2 border-r-gray-200 ${
+      className={`h-auto  w-[50vw] md:w-56 lg:w-60 md:flex flex-col justify-between p-4 bg-gray-100 border border-b-0 border-r-2 border-r-gray-200 ${
         darkMode ? "bg-gray-800" : "bg-white"
       }`}
     >
       <div className="w-full">
-        <a
-          href="/dashboard"
-          alt="LOGO"
-          className={`text-xl md:text-2xl ${
-            darkMode ? "text-gray-300" : "text-gray-500"
-          }`}
-        >
-          Twokey
-        </a>
+        <div className="flex justify-between items-center">
+          <a
+            href="/dashboard"
+            alt="LOGO"
+            className={`text-xl md:text-2xl ${
+              darkMode ? "text-gray-300" : "text-gray-500"
+            }`}
+          >
+            Twokey
+          </a>
+          <div className="md:hidden">
+            <MenuIcon onClick={toggleMenu} className="cursor-pointer" />
+          </div>
+        </div>
+
         <ul className={`${darkMode ? "text-white" : "text-gray-800"}`}>
           <p
             className={`text-xs text-gray-600 mt-4 mb-2 p-2 ${
@@ -108,12 +118,12 @@ function SideBar() {
           >
             Overview
           </p>
-          <li className="min-w-full">
-            <div className="flex">
+          <div className="flex items-center">
+            <li className="min-w-full">
               <a
                 href="/dashboard"
                 alt="Dashboard"
-                className={`flex justify-start min-w-full ${
+                className={`flex justify-start items-center min-w-full ${
                   location.pathname === "/dashboard"
                     ? `hover:${
                         darkMode ? "bg-gray-600" : "bg-gray-100"
@@ -130,8 +140,8 @@ function SideBar() {
                 <DashboardRoundedIcon />
                 <p className="px-2">Dashboard</p>
               </a>
-            </div>
-          </li>
+            </li>
+          </div>
           <p
             className={`text-xs text-gray-600 mt-4  p-2 ${
               darkMode ? "text-gray-100" : ""
@@ -145,7 +155,7 @@ function SideBar() {
               <a
                 href={department.path}
                 alt={department.name}
-                className={`flex justify-start min-w-full ${
+                className={`flex justify-start items-center min-w-full ${
                   location.pathname === department.path
                     ? `hover:${
                         darkMode ? "bg-gray-600" : "bg-gray-100"
@@ -172,12 +182,12 @@ function SideBar() {
           >
             Settings
           </p>
-          <div className="flex">
+          <div className="flex items-center">
             <li className="min-w-full ">
               <a
                 href="/settings"
                 alt="settings"
-                className={`flex justify-start min-w-full ${
+                className={`flex justify-start items-center min-w-full ${
                   location.pathname === "/settings"
                     ? `hover:${
                         darkMode ? "bg-gray-600" : "bg-gray-100"
@@ -196,11 +206,11 @@ function SideBar() {
               </a>
             </li>
           </div>
-          <div className="flex">
-            <li className="min-w-full">
+          <li className="min-w-full">
+            <div className="flex items-center">
               <button
                 onClick={handleLogout}
-                className={`flex justify-start min-w-full ${
+                className={`flex justify-start items-center min-w-full ${
                   location.pathname === "#"
                     ? `hover:${
                         darkMode ? "bg-gray-600" : "bg-gray-100"
@@ -217,11 +227,11 @@ function SideBar() {
                 <ExitToAppRoundedIcon />
                 <p className="px-2">LogOut</p>
               </button>
-            </li>
-          </div>
+            </div>
+          </li>
         </ul>
       </div>
-      <div className="min-w-full">
+      <div>
         <footer className="fixed bottom-4 left-4 ">
           <span className="">
             <a
