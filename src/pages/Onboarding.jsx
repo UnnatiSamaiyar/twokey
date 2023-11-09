@@ -67,7 +67,7 @@ const Onboarding = () => {
       try {
         let token = JSON.parse(sessionStorage.getItem("token"));
         const dep = await axios.get(
-          "https://twokeybackend.onrender.com/dept/list_depts/",
+          "https://twokeybackend.onrender.com/dept/listDepts/",
           {
             headers: {
               Authorization: `Bearer ${token.session.access_token}`,
@@ -157,25 +157,34 @@ const Onboarding = () => {
 
       if (data) {
         // Update user_info with firm data
-        const { data: userData, error: updateError } = await supabase
-          .from("user_info")
-          .update({
-            username: formData.username,
-            department: formData.department,
-            firstname: formData.firstName,
-            lastname: formData.lastName,
-          })
-          .eq("id", data.user.id)
-          .single();
 
-        if (updateError) {
-          console.error("Error updating user_info:", updateError);
-        } else {
-          console.log("User info updated successfully:", userData);
-          handleProfilePictureUpload();
-          sessionStorage.setItem("token", JSON.stringify(data));
-          navigate("/dashboard");
+        handleProfilePictureUpload();
+        sessionStorage.setItem("token", JSON.stringify(data));
+
+        let token = JSON.parse(sessionStorage.getItem("token"));
+        if (token) {
+          const res = await axios.put(
+            "https://twokeybackend.onrender.com/users/updateProfile/",
+            {
+              id: token.user.id,
+              username: formData.username,
+              name: formData.firstName,
+              last_name: formData.lastName,
+              dept: "7075576d-bbbc-47f7-9b50-a272e93dc66f",
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token.session.access_token}`,
+              },
+            }
+          );
+
+          console.log("onboarding success:", res);
+
+          // console.log("Profile data:", res.data);
+          // localStorage.setItem("profileData", JSON.stringify(res.data));
         }
+        navigate("/dashboard");
       }
     } catch (error) {
       alert(error.message);
@@ -186,7 +195,7 @@ const Onboarding = () => {
     try {
       const { data, error } = await supabase.storage
         .from("avatar")
-        .upload("testSuccess", formData.profilePicture, {
+        .upload(formData.email, formData.profilePicture, {
           cacheControl: "3600",
           upsert: false,
         });

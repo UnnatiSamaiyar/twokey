@@ -138,3 +138,31 @@ const Test = () => {
 };
 
 export default Test;
+
+// useEffect(() => {
+//   const updateProfile = async() =>{
+//     let token = JSON.parse(sessionStorage.getItem("token"));
+//       if (token) {
+//         const res = await axios.put(
+//           "https://twokeybackend.onrender.com/users/updateProfile/",
+//           {
+//             id: token.user.id,
+//             username: formData.username,
+//             name: formData.firstName,
+//             last_name: formData.lastName,
+//             dept: "7075576d-bbbc-47f7-9b50-a272e93dc66f",
+//           },
+//           {
+//             headers: {
+//               Authorization: `Bearer ${token.session.access_token}`,
+//             },
+//           }
+//         );
+
+//         console.log("onboarding success:", res);
+
+//         // console.log("Profile data:", res.data);
+//         // localStorage.setItem("profileData", JSON.stringify(res.data));
+//       }
+//   }
+// },[])

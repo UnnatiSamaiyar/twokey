@@ -19,7 +19,7 @@ const Profile = () => {
   useEffect(() => {
     let data = localStorage.getItem("profileData");
     setProfileData(JSON.parse(data));
-    console.log("local profile", JSON.parse(data));
+    // console.log("local profile", JSON.parse(data));
   }, []);
 
   useEffect(() => {
