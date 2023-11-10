@@ -4,8 +4,7 @@ import Paper from "@mui/material/Paper";
 import ProfilePersonalInfo from "../components/ProfilePersonalInfo";
 import ProfileWorkInformation from "../components/ProfileWorkInformation";
 import ProfileAddressInformation from "../components/ProfileAddressInformation";
-import axios from "axios";
-import { useAuth } from "../context/authContext";
+import ProfilePicDummy from "../assets/profilePicDummy.jpg";
 
 import ErrorPage from "../components/ErrorPage";
 
@@ -19,26 +18,25 @@ const Profile = () => {
   useEffect(() => {
     let data = localStorage.getItem("profileData");
     setProfileData(JSON.parse(data));
-    // console.log("local profile", JSON.parse(data));
   }, []);
 
-  useEffect(() => {
-    let token = JSON.parse(sessionStorage.getItem("token"));
+  // useEffect(() => {
+  //   let token = JSON.parse(sessionStorage.getItem("token"));
 
-    const getProfilePic = async () => {
-      try {
-        const { data } = supabase.storage
-          .from("avatar")
-          .getPublicUrl(token.user.email);
+  //   const getProfilePic = async () => {
+  //     try {
+  //       const { data } = supabase.storage
+  //         .from("avatar")
+  //         .getPublicUrl(token.user.email);
 
-        setPicture(data.publicUrl);
-      } catch (error) {
-        console.log("Error while getting ProfilePic.");
-      }
-    };
+  //       setPicture(data.publicUrl);
+  //     } catch (error) {
+  //       console.log("Error while getting ProfilePic.");
+  //     }
+  //   };
 
-    getProfilePic();
-  }, []);
+  //   getProfilePic();
+  // }, []);
 
   const toggleEditing = () => {
     if (isEditing) {
@@ -96,13 +94,17 @@ const Profile = () => {
       >
         <div className="p-4 border-2 border-gray-200 w-full rounded-xl flex flex-row justify-between items-center">
           <div className="flex flex-row items-center space-x-4">
-            {picture && (
+            {profileData && (
               <div
                 className="relative"
                 onClick={isEditing ? handleImageInputChange : null}
               >
                 <img
-                  src={picture}
+                  src={
+                    profileData.profile_pic
+                      ? profileData.profile_pic
+                      : ProfilePicDummy
+                  }
                   alt="ProfilePic"
                   className="rounded-full w-24 h-24"
                 />

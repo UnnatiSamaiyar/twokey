@@ -58,6 +58,7 @@ const Onboarding = () => {
     lastName: "",
     profilePicture: null,
   });
+  const [profilePicUrl, setProfilePicUrl] = useState("");
   const [isPictureSelected, setIsPictureSelected] = useState(false);
   const [departmentList, setDepartmentList] = useState([]);
   const navigate = useNavigate();
@@ -117,33 +118,6 @@ const Onboarding = () => {
     console.log("formData", formData);
   };
 
-  // const handleNextButtonClick = async () => {
-  //   console.log(formData);
-
-  //   try {
-  //     const { data, error } = await supabase.auth.signInWithPassword({
-  //       email: formData.email,
-  //       password: formData.password,
-  //     });
-
-  //     if (error) throw error;
-
-  //     if (data) {
-  //       const { data, error } = await supabase
-  //         .from("user_info")
-  //         .update({ other_column: "otherValue" })
-  //         .eq("some_column", "someValue")
-  //         .select();
-
-  //       handleProfilePictureUpload();
-  //       sessionStorage.setItem("token", JSON.stringify(data));
-  //       navigate("/dashboard");
-  //     }
-  //   } catch (error) {
-  //     alert(error.message);
-  //   }
-  // };
-
   const handleNextButtonClick = async () => {
     console.log(formData);
 
@@ -171,6 +145,7 @@ const Onboarding = () => {
               name: formData.firstName,
               last_name: formData.lastName,
               dept: "7075576d-bbbc-47f7-9b50-a272e93dc66f",
+              profile_pic: profilePicUrl,
             },
             {
               headers: {
@@ -203,7 +178,19 @@ const Onboarding = () => {
       if (error) {
         console.error("Error occurred in file upload:", error);
       } else {
-        console.log("File uploaded successfully:", data);
+        // console.log("File uploaded successfully:", data);
+
+        let token = JSON.parse(sessionStorage.getItem("token"));
+
+        try {
+          const { data } = supabase.storage
+            .from("avatar")
+            .getPublicUrl(token.user.email);
+
+          setProfilePicUrl(data.publicUrl);
+        } catch (error) {
+          console.log("Error while getting ProfilePic.");
+        }
       }
     } catch (error) {
       console.error(

@@ -108,30 +108,27 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  useEffect(() => {
-    const getProfileData = async () => {
-      try {
-        let token = JSON.parse(sessionStorage.getItem("token"));
+  const getProfileData = async () => {
+    try {
+      let token = JSON.parse(sessionStorage.getItem("token"));
 
-        if (token) {
-          const res = await axios.get(
-            "https://twokeybackend.onrender.com/users/getProfileInfo/",
-            {
-              headers: {
-                Authorization: `Bearer ${token.session.access_token}`,
-              },
-            }
-          );
+      if (token) {
+        const res = await axios.get(
+          "https://twokeybackend.onrender.com/users/getProfileInfo/",
+          {
+            headers: {
+              Authorization: `Bearer ${token.session.access_token}`,
+            },
+          }
+        );
 
-          // console.log("Profile data:", res.data);
-          localStorage.setItem("profileData", JSON.stringify(res.data));
-        }
-      } catch (error) {
-        console.log("error occured while fetching profile data", error);
+        // console.log("Profile data:", res.data);
+        localStorage.setItem("profileData", JSON.stringify(res.data));
       }
-    };
-    getProfileData();
-  }, [token]);
+    } catch (error) {
+      console.log("error occured while fetching profile data", error);
+    }
+  };
 
   const setSessionToken = (newToken) => {
     setToken(newToken);
@@ -204,6 +201,7 @@ export const AuthProvider = ({ children }) => {
     getGeolocation,
     listUsers,
     users,
+    getProfileData,
   };
 
   return (

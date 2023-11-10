@@ -8,10 +8,11 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import twokeyLanding from "../assets/twokeyLanding.png";
 import ErrorPage from "../components/ErrorPage";
+import { useAuth } from "../context/authContext";
 
 const Login = () => {
   let navigate = useNavigate();
-
+  const { getProfileData } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -54,6 +55,7 @@ const Login = () => {
       // setToken(data);
       if (data) {
         sessionStorage.setItem("token", JSON.stringify(data));
+        getProfileData();
       }
       navigate("/dashboard");
     } catch (error) {
