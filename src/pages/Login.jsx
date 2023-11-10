@@ -84,6 +84,15 @@ const Login = () => {
 
     orgData();
   }, []);
+
+  /**
+   * if user is already logged in then redirect to dashboard,
+   * instead of returning the login page
+   */
+  if (sessionStorage.getItem("token")) {
+    navigate("/dashboard");
+  }
+
   /**
    * comment this out on dev mode
    * as the api call fails from localhost

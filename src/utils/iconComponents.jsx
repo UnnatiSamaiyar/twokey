@@ -42,6 +42,9 @@ export function HRIcon() {
   );
 }
 
+/**
+ * Mapping of Icons to thier respective departmemts.
+ */
 export const departmentIcons = {
   Account: <AccountBalanceWalletOutlinedIcon />,
   Finance: <FinanceIcon />,
