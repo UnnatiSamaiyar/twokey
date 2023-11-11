@@ -276,7 +276,6 @@ function SideBar() {
 function SideBarContents({ departments, darkMode }) {
   const location = useLocation();
   const navigate = useNavigate();
-
   function handleLogout() {
     navigate("/");
     sessionStorage.removeItem("token");
