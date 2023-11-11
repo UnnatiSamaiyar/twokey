@@ -81,8 +81,8 @@ function SideBar() {
   }
 
   return (
-    <nav className="max-h-[100vh]">
-      <div className="w-fit h-fit border-2 px-4 py-2">
+    <nav className={`max-h-[100vh] ${darkMode && "bg-gray-800"}`}>
+      <div className="w-fit h-fit border-b-2 px-5 py-[9px]">
         <IconButton
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           color="inherit"
@@ -106,13 +106,13 @@ function SideBar() {
         }}
       >
         <nav
-          className={`w-[60vw] p-2 h-screen  bg-gray-10 ${
+          className={`w-[60vw] px-2 h-auto  bg-gray-10 ${
             darkMode ? "bg-gray-800" : "bg-white"
           } `}
         >
           <div className="w-full">
             <div
-              className={`flex justify-between items-center sticky top-0 pt-4 px-2  ${
+              className={`flex justify-between items-center sticky top-0 py-4 px-2  ${
                 darkMode ? "bg-gray-800" : "bg-white"
               }`}
             >
@@ -189,7 +189,7 @@ function SideBar() {
         >
           <div className="w-full">
             <div
-              className={`flex justify-between items-center sticky top-0 pt-4 px-2  ${
+              className={`flex justify-between items-center sticky top-0 py-4 px-2  ${
                 darkMode ? "bg-gray-800" : "bg-white"
               }`}
             >
@@ -198,8 +198,8 @@ function SideBar() {
                 alt="LOGO"
                 className={`text-xl md:text-2xl ${
                   darkMode
-                    ? "hover:text-gray-400 text-gray-300"
-                    : "text-gray-500 hover:text-gray-600"
+                    ? "hover:text-gray-400 text-gray-300 "
+                    : "text-gray-500 hover:text-gray-600 "
                 }`}
               >
                 Twokey
@@ -269,7 +269,7 @@ function SideBarContents({ departments, darkMode }) {
         }`}
       >
         <p
-          className={`text-xs  mt-4 mb-2 p-2 ${
+          className={`text-xs p-2 ${
             darkMode ? "text-gray-200" : "text-gray-600"
           }`}
         >
@@ -282,11 +282,15 @@ function SideBarContents({ departments, darkMode }) {
               alt="Dashboard"
               className={`flex justify-start items-center min-w-full ${
                 location.pathname === "/dashboard"
-                  ? `bg-gray-200 hover:bg-gray-100 duration-200 p-2 rounded-md text-sm ${
-                      darkMode && "hover:bg-gray-600 bg-gray-600"
-                    } `
-                  : `hover:bg-gray-100 ${
-                      darkMode && "hover:bg-gray-700 text-gray-100"
+                  ? ` p-2 rounded-md text-sm ${
+                      darkMode
+                        ? "hover:bg-gray-700 bg-gray-600"
+                        : "bg-gray-200 hover:bg-gray-100"
+                    } duration-200`
+                  : `${
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-gray-100"
                     } p-2 rounded-md text-sm duration-200`
               }`}
             >
@@ -310,11 +314,15 @@ function SideBarContents({ departments, darkMode }) {
               alt={department.name}
               className={`flex justify-start items-center min-w-full ${
                 location.pathname === department.path
-                  ? `bg-gray-200 hover:bg-gray-100 duration-200 p-2 rounded-md text-sm ${
-                      darkMode && "hover:bg-gray-600 bg-gray-600"
-                    } `
-                  : `hover:bg-gray-100 ${
-                      darkMode && "hover:bg-gray-700 text-gray-100"
+                  ? `p-2 rounded-md text-sm ${
+                      darkMode
+                        ? "hover:bg-gray-700 bg-gray-600"
+                        : "bg-gray-200 hover:bg-gray-100"
+                    } duration-200`
+                  : `${
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-gray-100 "
                     } p-2 rounded-md text-sm duration-200`
               }`}
             >
