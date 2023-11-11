@@ -13,6 +13,7 @@ import Development from "./pages/Development";
 import Manufacturing from "./pages/Manufacturing";
 import Sales from "./pages/Sales";
 import HR from "./pages/HR";
+import Background from "./components/Background";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useAuth } from "./context/authContext";
@@ -33,12 +34,9 @@ const App = () => {
         <SideBar />
         <div className="w-full">
           <TopBar />
-          <Routes>
-            {/* Enforces access control for wrapped routes. 
-                All The routes which are to be accessed by authorised user should be placed inside 
-                ProtectedRoute Wrapper.
-            */}
 
+          <Background />
+          <Routes>
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/account" element={<Account />} />

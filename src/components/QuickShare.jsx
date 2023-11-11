@@ -86,14 +86,10 @@ export default function QuickShare() {
           />
           <div
             {...getRootProps()}
-            className={`mt-2 h-64 w-80 flex items-center justify-center border-2 border-dashed border-gray-400 p-4 rounded-md text-center cursor-pointer ${
-              isDragActive
-                ? "bg-blue-50 border-blue-500"
-                : "hover:bg-blue-50 hover:border-blue-500"
-            }`}
+            className={`mt-2 h-64 w-80 flex items-center justify-center border-2 border-dashed border-blue-500 text-[#2C6ECB] bg-[#F2F7FE] p-4 rounded-md text-center cursor-pointer`}
           >
             <input {...getInputProps()} />
-            <p className="hover:text-blue-500">Drag files to upload</p>
+            <p className="hover:text-blue-500">Drop files to upload</p>
           </div>
           {droppedFiles.length > 0 && (
             <div>
@@ -139,6 +135,7 @@ export default function QuickShare() {
         </DialogActions>
       </Dialog>
       <QuickShareSelectReceivers
+        customFileName={customFileName}
         open={reviewOpen}
         onClose={() => setReviewOpen(false)}
         droppedFiles={droppedFiles}

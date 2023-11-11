@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ProfilePic from "../assets/profilePic.png";
 import { useDarkMode } from "../context/darkModeContext";
 import { useAuth } from "../context/authContext";
+import ProfilePicDummy from "../assets/profilePicDummy.jpg";
 import { supabase } from "../helper/supabaseClient";
 
 function SideBar() {
@@ -12,44 +13,50 @@ function SideBar() {
   const { darkMode } = useDarkMode();
   let navigate = useNavigate();
   const [picture, setPicture] = useState(null);
+  const [profileData, setProfileData] = useState({});
 
   useEffect(() => {
-    const getProfilePic = async () => {
-      try {
-        const { data } = supabase.storage
-          .from("avatar")
-          .getPublicUrl("onlyforsave1@gmail.com");
-
-        setPicture(data.publicUrl);
-
-        // console.log(data.publicUrl);
-      } catch (error) {
-        console.log("Error while getting ProfilePic.");
-      }
-    };
-
-    getProfilePic();
+    let data = localStorage.getItem("profileData");
+    setProfileData(JSON.parse(data));
   }, []);
+
+  // useEffect(() => {
+  //   const getProfilePic = async () => {
+  //     try {
+  //       const { data } = supabase.storage
+  //         .from("avatar")
+  //         .getPublicUrl("onlyforsave1@gmail.com");
+
+  //       setPicture(data.publicUrl);
+
+  //       // console.log(data.publicUrl);
+  //     } catch (error) {
+  //       console.log("Error while getting ProfilePic.");
+  //     }
+  //   };
+
+  //   getProfilePic();
+  // }, []);
 
   function handleLogout() {
     navigate("/");
     sessionStorage.removeItem("token");
   }
 
-  useEffect(() => {
-    async function fetchUser() {
-      try {
-        let token = JSON.parse(sessionStorage.getItem("token"));
-        setData(token.user.user_metadata.full_name);
+  // useEffect(() => {
+  //   async function fetchUser() {
+  //     try {
+  //       let token = JSON.parse(sessionStorage.getItem("token"));
+  //       setData(token.user.user_metadata.full_name);
 
-        // console.log("sidebar token :", token.user.user_metadata.full_name);
-      } catch (error) {
-        console.log("Error while fetching the user profile data.");
-      }
-    }
+  //       // console.log("sidebar token :", token.user.user_metadata.full_name);
+  //     } catch (error) {
+  //       console.log("Error while fetching the user profile data.");
+  //     }
+  //   }
 
-    fetchUser();
-  }, []);
+  //   fetchUser();
+  // }, []);
 
   const hideSideBar =
     location.pathname === "/" ||
@@ -78,8 +85,8 @@ function SideBar() {
 
   return (
     <nav
-      className={`h-auto w-56 flex flex-col justify-between p-4 bg-gray-100 border border-b-0 border-r-2 border-r-gray-200 ${
-        darkMode ? "bg-gray-800" : "bg-white"
+      className={`h-auto z-10 w-56 flex flex-col justify-between p-4 bg-gray-100 border border-b-0 border-r-2 border-r-gray-200 ${
+        darkMode ? "bg-gray-800" : "bg-[#f7f7ff]"
       }`}
     >
       <div>
@@ -104,10 +111,10 @@ function SideBar() {
               alt="dashboard"
               className={
                 location.pathname === "/dashboard"
-                  ? `hover:bg-gray-100 py-1.5 px-4 rounded-md ${
-                      darkMode ? "bg-gray-400" : "bg-gray-200"
+                  ? `hover:bg-[#C8C6FF4D] py-1.5 px-4 rounded-md ${
+                      darkMode ? "bg-gray-400" : "bg-[#C8C6FF4D]"
                     } text-sm`
-                  : `hover:bg-gray-100 py-1.5 px-4 rounded-md text-sm ${
+                  : `hover:bg-[#C8C6FF4D] py-1.5 px-4 rounded-md text-sm ${
                       darkMode ? "text-gray-100" : ""
                     }`
               }
@@ -130,7 +137,7 @@ function SideBar() {
                 alt={department.name}
                 className={
                   location.pathname === department.path
-                    ? "hover:bg-gray-100 py-1.5 px-4 rounded-md bg-gray-200 text-sm"
+                    ? "hover:bg-gray-100 py-1.5 px-4 rounded-md bg-[#C8C6FF4D] text-sm"
                     : "hover:bg-gray-100 py-1.5 px-4 rounded-md text-sm"
                 }
               >
@@ -152,7 +159,7 @@ function SideBar() {
               alt="settings"
               className={
                 location.pathname === "/settings"
-                  ? "hover:bg-gray-100 py-1.5 px-4 rounded-md bg-gray-200 text-sm"
+                  ? "hover:bg-gray-100 py-1.5 px-4 rounded-md bg-[#C8C6FF4D] text-sm"
                   : "hover:bg-gray-100 py-1.5 px-4 rounded-md text-sm"
               }
             >
@@ -185,13 +192,13 @@ function SideBar() {
               } flex flex-row gap-2`}
             >
               <img
-                src={picture ? picture : ProfilePic}
+                src={profileData ? profileData.profile_pic : ProfilePicDummy}
                 alt="ProfilePic"
                 className={`w-6 h-6 rounded-full ${
                   darkMode ? "filter brightness-100 border border-white" : ""
                 }`}
               />
-              #{data ? data : "Profile"}
+              #{profileData ? profileData.username : "Profile"}
             </a>
           </span>
         </footer>
