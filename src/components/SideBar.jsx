@@ -24,19 +24,34 @@ function SideBar() {
 
   const [data, setData] = useState("");
   const { darkMode } = useDarkMode();
+  let navigate = useNavigate();
   const [picture, setPicture] = useState(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [profileData, setProfileData] = useState({});
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
+    console.log(profileData, "profile");
     let data = localStorage.getItem("profileData");
     setProfileData(JSON.parse(data));
   }, []);
 
-  function handleLogout() {
-    navigate("/");
-    sessionStorage.removeItem("token");
-  }
+  // useEffect(() => {
+  //   const getProfilePic = async () => {
+  //     try {
+  //       const { data } = supabase.storage
+  //         .from("avatar")
+  //         .getPublicUrl("onlyforsave1@gmail.com");
+
+  //       setPicture(data.publicUrl);
+
+  //       // console.log(data.publicUrl);
+  //     } catch (error) {
+  //       console.log("Error while getting ProfilePic.");
+  //     }
+  //   };
+
+  //   getProfilePic();
+  // }, []);
 
   // useEffect(() => {
   //   async function fetchUser() {
@@ -58,6 +73,10 @@ function SideBar() {
     location.pathname === "/signup" ||
     location.pathname === "/onboarding";
 
+  if (hideSideBar) {
+    return null;
+  }
+
   let departments = [
     { name: "Account", path: "/account" },
     { name: "Finance", path: "/finance" },
@@ -66,6 +85,7 @@ function SideBar() {
     { name: "Sales", path: "/sales" },
     { name: "Human Resources", path: "/humanresources" },
   ];
+
   /**
    * If the user is unauthorised then no need to show the side panel.
    * Feel free to delete if needed.
@@ -75,40 +95,225 @@ function SideBar() {
   }
 
   return (
-    <nav
-      className={`h-auto w-56 flex flex-col justify-between p-4 bg-gray-100 border border-b-0 border-r-2 border-r-gray-200 ${
-        darkMode ? "bg-gray-800" : "bg-white"
-      }`}
-    >
-      <div>
-        <a
-          href="/dashboard"
-          alt="LOGO"
-          className={`text-2xl ${darkMode ? "text-gray-300" : "text-gray-500"}`}
+    <nav className={`h-auto ${darkMode ? "bg-gray-800" : "bg-[#f7f7ff]"}`}>
+      <div
+        className={`w-[72px] h-[72px] p-4 flex justify-center items-center ${
+          darkMode && "text-[#f7f7ff]"
+        }`}
+      >
+        <IconButton
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          color="inherit"
+          edge="start"
+          sx={{
+            display: { md: "none", xs: "block" },
+          }}
         >
-          Twokey
-        </a>
-        <ul className={`${darkMode ? "text-white" : "text-gray-800"}`}>
-          <p
-            className={`text-xs text-gray-600 mt-4 mb-2 p-2 ${
-              darkMode ? "text-gray-100" : ""
+          <MenuIcon />
+        </IconButton>
+      </div>
+
+      <Drawer
+        anchor="left"
+        open={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        variant="temporary"
+        sx={{
+          display: { md: "none", xs: "block" },
+          borderBottom: 2,
+        }}
+      >
+        <nav
+          className={`w-[60vw] px-2 h-auto  bg-gray-10 ${
+            darkMode ? "bg-gray-800" : "bg-[#f7f7ff]"
+          } `}
+        >
+          <div className="w-full">
+            <div
+              className={`flex justify-between items-center sticky top-0 py-4 px-2  ${
+                darkMode ? "bg-gray-800" : "bg-[#f7f7ff]"
+              }`}
+            >
+              <a
+                href="/dashboard"
+                alt="LOGO"
+                className={`text-xl md:text-2xl ${
+                  darkMode
+                    ? "hover:text-gray-400 text-gray-300"
+                    : "text-gray-500 hover:text-gray-600"
+                }`}
+              >
+                Twokey
+              </a>
+            </div>
+            <SideBarContents departments={departments} darkMode={darkMode} />
+            <div className="my-12"></div>
+          </div>
+          <div
+            className={`sticky bottom-0 ${
+              darkMode ? "bg-gray-800" : "bg-[#f7f7ff]"
             }`}
           >
-            Overview
-          </p>
-          <li className=" ">
+            <footer className="w-full py-2 sticky bottom-0">
+              <span>
+                <a
+                  href="/profile"
+                  alt="Profile"
+                  className={` p-2 rounded-md  
+                  ${
+                    darkMode
+                      ? "text-gray-300 hover:bg-gray-700"
+                      : "hover:bg-gray-100"
+                  } flex justify-start items-center font-medium duration-200`}
+                >
+                  <img
+                    src={picture ? picture : ProfilePic}
+                    loading="lazy"
+                    alt={data ? `${data}'s Profile Picture` : "Profile Picture"}
+                    className={`w-6 h-6 rounded-full ${
+                      darkMode
+                        ? "filter brightness-100 border border-white"
+                        : ""
+                    }`}
+                  />
+                  <p className="px-2">#{data ? data : "Profile"}</p>
+                </a>
+              </span>
+            </footer>
+          </div>
+        </nav>
+      </Drawer>
+      <Drawer
+        anchor="top"
+        open
+        variant="persistent"
+        sx={{
+          width: { md: 224, lg: 240, xs: "auto" },
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width: { md: 224, lg: 240, xs: "auto" },
+          },
+          "& .MuiDrawer-paper::-webkit-scrollbar": {
+            display: "none" /* Hide scrollbar for Chrome, Safari, and Edge */,
+          },
+        }}
+      >
+        <nav
+          className={` ${
+            !isMenuOpen && "hidden md:block md:w-56 lg:w-60"
+          }  px-4 bg-gray-100  border-r border-r-gray-200 ${
+            darkMode ? "bg-gray-800" : "bg-[#f7f7ff]"
+          }`}
+        >
+          <div className="w-full">
+            <div
+              className={`flex justify-between items-center sticky top-0 py-4 px-2  ${
+                darkMode ? "bg-gray-800" : "bg-[#f7f7ff]"
+              }`}
+            >
+              <a
+                href="/dashboard"
+                alt="LOGO"
+                className={`text-xl md:text-2xl ${
+                  darkMode
+                    ? "hover:text-gray-400 text-gray-300 "
+                    : "text-gray-500 hover:text-gray-600 "
+                }`}
+              >
+                Twokey
+              </a>
+            </div>
+            <SideBarContents departments={departments} darkMode={darkMode} />
+          </div>
+          <div
+            className={`sticky bottom-0 ${
+              darkMode ? "bg-gray-800" : "bg-[#f7f7ff]"
+            }`}
+          >
+            <footer className="w-full py-2 sticky bottom-0">
+              <span>
+                <a
+                  href="/profile"
+                  alt="Profile"
+                  className={` p-2 rounded-md  
+                  ${
+                    darkMode
+                      ? "text-gray-300 hover:bg-gray-700"
+                      : "hover:bg-[#C8C6FF4D]"
+                  } flex justify-start items-center font-medium duration-200`}
+                >
+                  <img
+                    src={
+                      profileData ? profileData.profile_pic : ProfilePicDummy
+                    }
+                    alt="ProfilePic"
+                    className={`w-6 h-6 rounded-full ${
+                      darkMode
+                        ? "filter brightness-100 border border-white"
+                        : ""
+                    }`}
+                  />
+                  <p className="px-2">
+                    #{profileData ? profileData.username : "Profile"}
+                  </p>
+                </a>
+              </span>
+            </footer>
+          </div>
+        </nav>
+      </Drawer>
+    </nav>
+  );
+}
+
+/**
+ * Renders the contents of the Sidebar based on the provided departments.
+ * @param {Object} props - The component props.
+ * @param {Array} props.departments - The list of department objects.
+ * @param {boolean} props.darkMode - The dark mode state.
+ * @returns {JSX.Element} The SidebarContents component.
+ */
+function SideBarContents({ departments, darkMode }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    navigate("/");
+    sessionStorage.removeItem("token");
+  }
+
+  return (
+    <>
+      <ul
+        className={`overflow-y-auto h-full ${
+          darkMode ? "text-white" : "text-gray-800"
+        }`}
+      >
+        <p
+          className={`text-xs p-2 ${
+            darkMode ? "text-gray-200" : "text-gray-600"
+          }`}
+        >
+          Overview
+        </p>
+        <div className="flex items-center">
+          <li className="min-w-full">
             <a
               href="/dashboard"
               alt="Dashboard"
               className={`flex justify-start items-center min-w-full ${
                 location.pathname === "/dashboard"
-                  ? `hover:bg-gray-100 py-1.5 px-4 rounded-md ${
-                      darkMode ? "bg-gray-400" : "bg-gray-200"
-                    } text-sm`
-                  : `hover:bg-gray-100 py-1.5 px-4 rounded-md text-sm ${
-                      darkMode ? "text-gray-100" : ""
-                    }`
-              }
+                  ? ` p-2 rounded-md text-sm ${
+                      darkMode
+                        ? "hover:bg-gray-700 bg-gray-600"
+                        : "bg-sidebar-pressed text-gray-100 hover:text-gray-700 hover:bg-[#C8C6FF4D]"
+                    } duration-200`
+                  : `${
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-[#C8C6FF4D]"
+                    } p-2 rounded-md text-sm duration-200`
+              }`}
             >
               <DashboardRoundedIcon />
               <p className="px-2">Dashboard</p>
@@ -123,21 +328,30 @@ function SideBar() {
           Department
         </p>
 
-          {departments.map((department, index) => (
-            <li key={index} className="mb-4">
-              <a
-                href={department.path}
-                alt={department.name}
-                className={
-                  location.pathname === department.path
-                    ? "hover:bg-gray-100 py-1.5 px-4 rounded-md bg-gray-200 text-sm"
-                    : "hover:bg-gray-100 py-1.5 px-4 rounded-md text-sm"
-                }
-              >
-                {department.name}
-              </a>
-            </li>
-          ))}
+        {departments.map((department, index) => (
+          <li key={index} className="min-w-full my-2">
+            <a
+              href={department.path}
+              alt={department.name}
+              className={`flex justify-start items-center min-w-full ${
+                location.pathname === department.path
+                  ? `p-2 rounded-md text-sm ${
+                      darkMode
+                        ? "hover:bg-gray-700 bg-gray-600"
+                        : "bg-sidebar-pressed text-gray-100 hover:text-gray-700 hover:bg-[#C8C6FF4D]"
+                    } duration-200`
+                  : `${
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-[#C8C6FF4D]"
+                    } p-2 rounded-md text-sm duration-200`
+              }`}
+            >
+              {departmentIcons[department.name]}
+              <p className="px-2">{department.name}</p>
+            </a>
+          </li>
+        ))}
 
         <p
           className={`text-xs mt-4 mb-2 p-2 ${
@@ -153,9 +367,15 @@ function SideBar() {
               alt="settings"
               className={`flex justify-start items-center min-w-full ${
                 location.pathname === "/settings"
-                  ? "hover:bg-gray-100 py-1.5 px-4 rounded-md bg-gray-200 text-sm"
-                  : "hover:bg-gray-100 py-1.5 px-4 rounded-md text-sm"
-              }
+                  ? ` duration-200 p-2 rounded-md text-sm ${
+                      darkMode
+                        ? "hover:bg-gray-700 bg-gray-600"
+                        : "bg-sidebar-pressed text-gray-100 hover:text-gray-700 hover:bg-[#C8C6FF4D]"
+                    }`
+                  : `hover:bg-[#C8C6FF4D] p-2 rounded-md text-sm ${
+                      darkMode && "hover:bg-gray-600 text-gray-100"
+                    } duration-200`
+              }`}
             >
               <TuneRoundedIcon />
               <p className="px-2">Settings</p>
@@ -168,13 +388,14 @@ function SideBar() {
               onClick={handleLogout}
               className={`flex justify-start items-center min-w-full ${
                 location.pathname === "#"
-                  ? `hover:${
-                      darkMode ? "bg-gray-600" : "bg-gray-100"
-                    } duration-200 p-2 rounded-md ${
-                      darkMode ? "bg-gray-700" : "bg-gray-200"
-                    } text-sm`
+                  ? `
+                  duration-200 p-2 rounded-md ${
+                    darkMode
+                      ? "hover:bg-gray-600 bg-gray-700"
+                      : "bg-sidebar-pressed text-gray-100 hover:text-gray-700 hover:bg-[#C8C6FF4D]"
+                  } text-sm`
                   : `hover:${
-                      darkMode ? "bg-gray-600" : "bg-gray-100"
+                      darkMode ? "bg-gray-600" : "bg-[#C8C6FF4D]"
                     } p-2 rounded-md text-sm ${
                       darkMode ? "text-gray-100" : ""
                     } duration-200`
@@ -183,32 +404,10 @@ function SideBar() {
               <ExitToAppRoundedIcon />
               <p className="px-2">LogOut</p>
             </button>
-          </li>
-        </ul>
-      </div>
-      <div>
-        <footer className="fixed bottom-4 left-4">
-          <span className="">
-            <a
-              href="/profile"
-              alt="Profile"
-              className={`${
-                darkMode ? "text-gray-300" : ""
-              } flex flex-row gap-2`}
-            >
-              <img
-                src={picture ? picture : ProfilePic}
-                alt="ProfilePic"
-                className={`w-6 h-6 rounded-full ${
-                  darkMode ? "filter brightness-100 border border-white" : ""
-                }`}
-              />
-              #{data ? data : "Profile"}
-            </a>
-          </span>
-        </footer>
-      </div>
-    </nav>
+          </div>
+        </li>
+      </ul>
+    </>
   );
 }
 

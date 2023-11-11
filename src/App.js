@@ -49,13 +49,15 @@ const App = () => {
               <Route path="/humanresources" element={<HR />} />
               <Route path="/test" element={<Test />} />
             </Route>
-            {/* Public Routes should goes below */}
+            {/* Public Routes should go below */}
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/" element={<Login />} exact />
             <Route
               path="/*"
-              element={<ErrorPage error={"We could not find that page."} />}
+              element={
+                <ErrorPage error={"We could not find the requested page."} />
+              }
             />
           </Routes>
         </div>
