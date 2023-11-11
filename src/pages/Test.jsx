@@ -55,6 +55,22 @@ const Test = () => {
   //   }
   // };
 
+  const getLogs = async () => {
+    try {
+      const users = await axios.get(
+        "https://twokeybackend.onrender.com/file/getLogs/access/d1823f2d-3acd-4b7f-8b4f-90a875811966?recs=10",
+        {
+          headers: {
+            Authorization: `Bearer ${token.session.access_token}`,
+          },
+        }
+      );
+      console.log("users :", users);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const listUsers = async () => {
     try {
       const users = await axios.get(
@@ -124,6 +140,13 @@ const Test = () => {
         onClick={getProfilePic}
       >
         Get ProfilePic
+      </button>
+
+      <button
+        className="py-2 px-4 bg-blue-400 text-white rounded-md"
+        onClick={getLogs}
+      >
+        Get Logs
       </button>
 
       {picture && (

@@ -4,6 +4,7 @@ import IconButton from "@mui/material/IconButton";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { supabase } from "../helper/supabaseClient";
 import { useAuth } from "../context/authContext";
+import PDFPreview from "../assets/pdfPreview.jpg";
 
 const FileDrawer = ({
   isDrawerOpen,
@@ -97,7 +98,9 @@ const FileDrawer = ({
         </IconButton>
         <h4 className="font-semibold text-sm">File Preview</h4>
         <div className="flex flex-col justify-center items-center">
-          <div className="w-48 h-64 bg-gray-100 my-2 rounded-md shadow-md"></div>
+          <div className="bg-gray-100 my-2 rounded-md shadow-md">
+            <img src={PDFPreview} alt="preview" />
+          </div>
           <h2>{selectedFileName}</h2>
         </div>
         <hr className="my-2" />

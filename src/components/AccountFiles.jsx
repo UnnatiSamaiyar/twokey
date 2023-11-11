@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { DataGrid } from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import TableContainer from "@mui/material/TableContainer";
+import Table from "@mui/material/Table";
+import TableHead from "@mui/material/TableHead";
+import TableBody from "@mui/material/TableBody";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import IconButton from "@mui/material/IconButton";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import Collapse from "@mui/material/Collapse";
+import Typography from "@mui/material/Typography";
+import Tooltip from "@mui/material/Tooltip";
+import axios from "axios";
+import { supabase } from "../helper/supabaseClient";
 
 // Define the formatFileSize function
 function formatFileSize(sizeInBytes) {
@@ -14,150 +28,180 @@ function formatFileSize(sizeInBytes) {
   return size.toFixed(2) + " " + units[unitIndex];
 }
 
-const originalData = [
-  {
-    id: "5fe63f9c-6677-4199-b972-13bc711dfcc6",
-    name: "sample.pdf",
-    org_name: "Google",
-    dept_name: "Marketing",
-    metadata: {
-      size: 32,
-      mimetype: "text/plain;charset=UTF-8",
-    },
-  },
-  {
-    id: "0cc4b60d-73f3-4e94-ac6c-2407243a7f79",
-    name: "two (1).pptx",
-    org_name: "Google",
-    dept_name: "Marketing",
-    metadata: {
-      size: 6719767,
-      mimetype:
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    },
-  },
-  {
-    id: "6f29ecac-8020-430a-81be-8d470a16f21c",
-    name: "Two key contract details.docx",
-    org_name: "Google",
-    dept_name: "Marketing",
-    metadata: {
-      size: 18099,
-      mimetype:
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    },
-  },
-  {
-    id: "d1823f2d-3acd-4b7f-8b4f-90a875811966",
-    name: "hck.pdf",
-    org_name: "Google",
-    dept_name: "Marketing",
-    metadata: {
-      size: 32,
-      mimetype: "text/plain;charset=UTF-8",
-    },
-  },
-  {
-    id: "ea06abc6-88d5-4a1a-bb8e-d36c18fd07eb",
-    name: "acquisitions.md",
-    org_name: "Google",
-    dept_name: "Marketing",
-    metadata: {
-      size: 909,
-      mimetype: "application/octet-stream",
-    },
-  },
-  {
-    id: "467d134f-1e35-4444-9a37-b38c066ffcc7",
-    name: "Screenshot (138).png",
-    org_name: "Google",
-    dept_name: "Marketing",
-    metadata: {
-      size: 358518,
-      mimetype: "image/png",
-    },
-  },
-  {
-    id: "d90304c9-b4e3-4909-bd6c-b059ae7cd167",
-    name: "lose.jpg",
-    org_name: "Google",
-    dept_name: "Marketing",
-    metadata: {
-      size: 80531,
-      mimetype: "image/jpeg",
-    },
-  },
-];
-
 const AccountFiles = () => {
   const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
-    // Filter the original data to extract name, size, and mimetype
-    const filtered = originalData.map((item) => ({
-      id: item.id,
-      name: item.name,
-      size: formatFileSize(item.metadata.size), // Format size using the function
-      mimetype: item.metadata.mimetype,
-      status: "Team",
-      security: "Enhanced",
-    }));
-    setFilteredData(filtered);
-  }, []);
+    async function fetchRecentFiles() {
+      try {
+        let token = JSON.parse(sessionStorage.getItem("token"));
 
-  const columns = [
-    { field: "id", width: 50, headerName: "ID" },
-    { field: "name", width: 350, headerName: "FILE NAME" },
-    {
-      field: "status",
-      width: 150,
-      headerName: "STATUS",
-      renderCell: (params) => {
-        const value = params.value;
-        return (
-          <div className="bg-gray-200 text-gray-700 w-1/2 py-1 px-2 rounded-md">
-            {value}
-          </div>
+        const recentFilesFromBackend = await axios.get(
+          "https://twokeybackend.onrender.com/file/files/",
+          {
+            headers: {
+              Authorization: `Bearer ${token.session.access_token}`,
+            },
+          }
         );
-      },
-    },
-    {
-      field: "size",
-      width: 150,
-      headerName: "SIZE",
-      renderCell: (params) => {
-        const value = params.value;
-        return (
-          <div className="bg-gray-200 text-gray-700 w-2/3 py-1 px-2 rounded-md">
-            {value}
-          </div>
-        );
-      },
-    },
-    {
-      field: "security",
-      width: 150,
-      headerName: "SECURITY",
-      renderCell: (params) => {
-        const value = params.value;
-        return (
-          <div className="bg-green-100 text-green-800 text-sm py-1 px-2 rounded-md">
-            {value}
-          </div>
-        );
-      },
-    },
-    { field: "mimetype", width: 200, headerName: "FILE TYPE" },
-  ];
+
+        console.log("recentFilesFromBackend", recentFilesFromBackend);
+
+        if (recentFilesFromBackend) {
+          const mappedFiles = recentFilesFromBackend.data.map(async (file) => {
+            try {
+              const { data } = await supabase.storage
+                .from("avatar")
+                .getPublicUrl(file.owner_email);
+
+              return {
+                id: file.id,
+                name: file.name.substring(0, 80),
+                size: formatFileSize(file.metadata.size),
+                publicUrl: data.publicUrl,
+                owner: file.owner_email,
+                mimetype: file.metadata.mimetype,
+                status: "Team",
+                security: "Enhanced",
+                lastUpdate: new Date(file.metadata.lastModified).toLocaleString(
+                  "en-IN",
+                  {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                    hour12: true,
+                  }
+                ),
+              };
+            } catch (error) {
+              console.log("Error while getting public URL:", error);
+              return null;
+            }
+          });
+
+          const resolvedFiles = await Promise.all(mappedFiles);
+          const filteredFiles = resolvedFiles.filter((file) => file !== null);
+          console.log("Files:", filteredFiles);
+
+          // Set the filtered files to the state
+          setFilteredData(filteredFiles);
+        }
+      } catch (error) {
+        console.error("Error fetching files:", error);
+      }
+    }
+
+    fetchRecentFiles();
+  }, []);
 
   return (
     <div className="text-center">
       <p className="text-lg text-left font-semibold my-6">Account Files</p>
-      <Box sx={{ height: 550, width: "100%" }}>
-        <DataGrid columns={columns} rows={filteredData} />
+      <Box sx={{ width: "100%" }}>
+        <TableContainer component={Paper}>
+          <Table aria-label="collapsible table">
+            <TableHead>
+              <TableRow sx={{ backgroundColor: "#F7F9FCCC" }}>
+                <TableCell />
+                <TableCell>FILE NAME</TableCell>
+                <TableCell>OWNER</TableCell>
+                <TableCell align="center">
+                  STATUS
+                  <b className="text-gray-50 text-xs bg-gray-500 rounded-full px-1 mx-1">
+                    i
+                  </b>
+                </TableCell>
+                <TableCell align="center">SIZE</TableCell>
+                <TableCell align="center">
+                  SECURITY
+                  <b className="text-gray-50 text-xs bg-gray-500 rounded-full px-1 mx-1">
+                    i
+                  </b>
+                </TableCell>
+                <TableCell align="center">LAST UPDATED</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredData.map((row) => (
+                <Row key={row.id} row={row} />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Box>
     </div>
   );
 };
+
+function Row(props) {
+  const { row } = props;
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <React.Fragment>
+      <TableRow
+        sx={{ "& > *": { borderBottom: "unset" }, cursor: "pointer" }}
+        onClick={() => setOpen(!open)}
+      >
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowRightIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+
+        <TableCell component="th" scope="row">
+          <p className="text-indigo-600 font-medium">{row.name}</p>
+        </TableCell>
+        <TableCell align="center">
+          <Tooltip title={row.owner}>
+            <img
+              src={row.publicUrl} // Assuming publicUrl is the URL for the owner's image
+              alt="Owner"
+              style={{ width: "30px", height: "30px", borderRadius: "10%" }}
+            />
+          </Tooltip>
+        </TableCell>
+        <TableCell align="center">
+          <p className="bg-gray-100 text-gray-800 rounded-md py-1">
+            {row.status}
+          </p>
+        </TableCell>
+        <TableCell align="center">
+          <p className="bg-gray-100 text-gray-800 rounded-md py-1">
+            {row.size}
+          </p>
+        </TableCell>
+        <TableCell align="center">
+          <strong className="bg-green-100 text-green-700  rounded-md py-1 px-4">
+            {row.security}
+          </strong>
+        </TableCell>
+        <TableCell align="center">
+          <p className="">{row.lastUpdate}</p>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box sx={{ margin: 1 }}>
+              <Typography variant="h6" gutterBottom component="div">
+                {row.publicUrl}
+              </Typography>
+              <Typography variant="body2" gutterBottom component="div">
+                {/* Display additional details if needed */}
+              </Typography>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </React.Fragment>
+  );
+}
 
 export default AccountFiles;

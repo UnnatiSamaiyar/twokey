@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "../helper/supabaseClient";
 import axios from "axios";
 import FileDrawer from "./FileDrawer";
+import PDFPreview from "../assets/pdfPreviewDummy.jpg";
 
 const RecentFiles = () => {
   const [files, setFiles] = useState([]);
@@ -34,7 +35,7 @@ const RecentFiles = () => {
         );
 
         const mappedFiles = recentFilesFromBackend.data
-          .slice(0, 6)
+          .slice(0, 5)
           .map((file) => ({
             name: file.name.substring(0, 80),
             size: formatFileSize(file.metadata.size),
@@ -70,18 +71,20 @@ const RecentFiles = () => {
   return (
     <div>
       <p className="text-lg font-semibold my-4">Recent Files</p>
-      <div className="grid grid-cols-3 gap-4 text-gray-600">
+      <div className="grid grid-cols-5 gap-4 text-gray-600">
         {files &&
           files.map((file, index) => (
             <div
               key={index}
               className="border border-gray-200 p-2 rounded-lg shadow-md cursor-pointer"
-              onClick={() => openDrawer(file.name, file.size)} // Pass name and size to openDrawer
+              onClick={() => openDrawer(file.name, file.size)}
             >
-              <img src={file.previewURL} alt="File Preview" />
-              <h5 className="font-semibold">{file.name}</h5>
-              <h6 className="text-sm font-semibold">File Info:</h6>
-              <p className="text-xs text-gray-500 font-light">{file.size}</p>
+              <img src={PDFPreview} alt="File Preview" className="rounded-md" />
+              <span>
+                <h5 className="font-semibold">{file.name}</h5>
+                <h6 className="text-sm font-semibold">File Info:</h6>
+                <p className="text-xs text-gray-500 font-light">{file.size}</p>
+              </span>
             </div>
           ))}
       </div>
