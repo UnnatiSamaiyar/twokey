@@ -48,10 +48,17 @@ export default function QuickShareSelectSecurityLevel({
       }
 
       showSnackbar("Upload successful", "success");
+      setTimeout(() => {
+        onClose();
+      }, 3000);
     } catch (error) {
       console.error("Error occurred in file upload:", error);
 
+      // onClose();
       showSnackbar("Upload failed. Please try again.", "error");
+      setTimeout(() => {
+        onClose();
+      }, 3000);
     }
   };
 
@@ -84,8 +91,8 @@ export default function QuickShareSelectSecurityLevel({
         "https://twokeybackend.onrender.com/file/shareFile/",
         {
           file: [fileId],
-          shared_with: ["3f53d0fc-e1a2-40de-bdca-ec082ca11d9c"],
-          expiration_time: 5,
+          shared_with: [securityAllotmentData[0].user],
+          expiration_time: securityAllotmentData[0].timeDifference,
           security_check: {},
         },
         {
@@ -103,7 +110,7 @@ export default function QuickShareSelectSecurityLevel({
 
   function handleSecurityAllocation(data) {
     setSecurityAllotmentData(data);
-    // console.log(data);
+    console.log("handleSecurityAllocation", data);
   }
 
   const handleSnackbarClose = () => {
@@ -197,8 +204,8 @@ export default function QuickShareSelectSecurityLevel({
           Cancel
         </button>
         <button
-          // onClick={handleFinalUpload}
-          onClick={() => console.log(securityAllotmentData)}
+          onClick={handleFinalUpload}
+          // onClick={() => console.log(securityAllotmentData)}
           //   onClick={shareFiles}
           //   onClick={handleFileIdRetrieval}
           className="bg-blue-700 text-white py-1 px-3 rounded-lg"

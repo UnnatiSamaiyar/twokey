@@ -8,6 +8,11 @@ import TopBar from "./components/TopBar";
 import Onboarding from "./pages/Onboarding";
 import Profile from "./pages/Profile";
 import Test from "./pages/Test";
+import Finance from "./pages/Finance";
+import Development from "./pages/Development";
+import Manufacturing from "./pages/Manufacturing";
+import Sales from "./pages/Sales";
+import HR from "./pages/HR";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useAuth } from "./context/authContext";
@@ -39,6 +44,11 @@ const App = () => {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/account" element={<Account />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/finance" element={<Finance />} />
+              <Route path="/development" element={<Development />} />
+              <Route path="/sales" element={<Sales />} />
+              <Route path="/manufacturing" element={<Manufacturing />} />
+              <Route path="/humanresources" element={<HR />} />
               <Route path="/test" element={<Test />} />
             </Route>
             {/* Public Routes should goes below */}
