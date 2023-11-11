@@ -100,11 +100,7 @@ const Profile = () => {
                 onClick={isEditing ? handleImageInputChange : null}
               >
                 <img
-                  src={
-                    profileData.profile_pic
-                      ? profileData.profile_pic
-                      : ProfilePicDummy
-                  }
+                  src={profileData ? profileData.profile_pic : ProfilePicDummy}
                   alt="ProfilePic"
                   className="rounded-full w-24 h-24"
                 />

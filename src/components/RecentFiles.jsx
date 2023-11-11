@@ -3,8 +3,11 @@ import { supabase } from "../helper/supabaseClient";
 import axios from "axios";
 import FileDrawer from "./FileDrawer";
 import PDFPreview from "../assets/pdfPreviewDummy.jpg";
+import QuickShare from "../components/QuickShare";
+import { useDarkMode } from "../context/darkModeContext";
 
 const RecentFiles = () => {
+  const { darkMode } = useDarkMode();
   const [files, setFiles] = useState([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedFileName, setSelectedFileName] = useState("");
@@ -70,8 +73,20 @@ const RecentFiles = () => {
 
   return (
     <div>
-      <p className="text-lg font-semibold my-4">Recent Files</p>
-      <div className="grid grid-cols-5 gap-4 text-gray-600">
+      <div className="flex flex-row justify-between items-center ">
+        <p className="text-lg font-semibold my-4">Recent Files</p>
+        <span className="flex gap-2">
+          <button
+            className={`py-1 px-4 rounded-md ${
+              darkMode ? "bg-gray-600" : "bg-gray-50"
+            } border`}
+          >
+            + Share
+          </button>
+          <QuickShare />
+        </span>
+      </div>
+      <div className="grid grid-cols-5 gap-4 bg-inherit text-gray-600">
         {files &&
           files.map((file, index) => (
             <div

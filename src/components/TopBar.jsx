@@ -28,8 +28,8 @@ const TopBar = () => {
   return (
     <nav
       className={`h-[72px] w-full ${
-        darkMode ? "bg-gray-800" : "bg-white"
-      } border-b-2 p-1`}
+        darkMode ? "bg-gray-800" : "bg-[#F1F1FF]"
+      } p-1`}
     >
       <div className="container mx-auto flex items-center justify-between h-16 px-8">
         <p
@@ -56,8 +56,8 @@ const TopBar = () => {
               type="search"
               placeholder="Search"
               className={`w-full p-1 pl-12 ${
-                darkMode ? "bg-gray-700" : "bg-gray-100"
-              } rounded-md text-white`}
+                darkMode ? "bg-gray-700 text-white" : "bg-white texy-gray-700"
+              } rounded-md`}
             ></input>
           </div>
           <span className="flex gap-2">

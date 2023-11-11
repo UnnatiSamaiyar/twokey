@@ -28,7 +28,7 @@ const Dashboard = () => {
   return (
     <div
       className={`p-4 h-screen ${
-        darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-800"
+        darkMode ? "bg-gray-800 text-white" : "text-gray-800"
       }`}
     >
       <div className={`flex flex-row justify-between items-center `}>

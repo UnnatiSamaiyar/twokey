@@ -14,6 +14,7 @@ export default function QuickShareSelectReceivers({
   onClose,
   droppedFiles,
   handleRemoveFile,
+  customFileName,
 }) {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const { users } = useAuth();
@@ -158,6 +159,7 @@ export default function QuickShareSelectReceivers({
 
       {securityLevelOpen && (
         <QuickShareSelectSecurityLevel
+          customFileName={customFileName}
           open={securityLevelOpen}
           selectedUsers={selectedUsers}
           onClose={() => setSecurityLevelOpen(false)}

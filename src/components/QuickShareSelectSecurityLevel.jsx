@@ -17,6 +17,7 @@ export default function QuickShareSelectSecurityLevel({
   onClose,
   droppedFiles,
   handleRemoveFile,
+  customFileName,
 }) {
   const [alignment, setAlignment] = useState("low");
   const [securityAllotmentData, setSecurityAllotmentData] = useState("");
@@ -30,12 +31,44 @@ export default function QuickShareSelectSecurityLevel({
     console.log(newAlignment);
   };
 
+  // const handleFinalUpload = async () => {
+  //   try {
+  //     for (const file of droppedFiles) {
+  //       const { data, error } = await supabase.storage
+  //         .from("TwoKey")
+  //         .upload(file.name, file, {
+  //           cacheControl: "3600",
+  //           upsert: false,
+  //         });
+  //       console.log("uploaded file:", data.path);
+  //       handleFileIdRetrieval(data.path);
+
+  //       if (error) {
+  //         throw new Error("File upload failed");
+  //       }
+  //     }
+
+  //     showSnackbar("Upload successful", "success");
+  //     setTimeout(() => {
+  //       onClose();
+  //     }, 3000);
+  //   } catch (error) {
+  //     console.error("Error occurred in file upload:", error);
+
+  //     // onClose();
+  //     showSnackbar("Upload failed. Please try again.", "error");
+  //     setTimeout(() => {
+  //       onClose();
+  //     }, 3000);
+  //   }
+  // };
+
   const handleFinalUpload = async () => {
     try {
       for (const file of droppedFiles) {
         const { data, error } = await supabase.storage
           .from("TwoKey")
-          .upload(file.name, file, {
+          .upload(customFileName || file.name, file, {
             cacheControl: "3600",
             upsert: false,
           });
@@ -54,7 +87,6 @@ export default function QuickShareSelectSecurityLevel({
     } catch (error) {
       console.error("Error occurred in file upload:", error);
 
-      // onClose();
       showSnackbar("Upload failed. Please try again.", "error");
       setTimeout(() => {
         onClose();
