@@ -27,7 +27,7 @@ const Dashboard = () => {
   }
   return (
     <div
-      className={`p-4 h-screen ${
+      className={`w-full py-4 px-2 h-screen  ${
         darkMode ? "bg-gray-800 text-white" : "text-gray-800"
       }`}
     >

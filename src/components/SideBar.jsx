@@ -95,7 +95,7 @@ function SideBar() {
   }
 
   return (
-    <nav className={`h-auto ${darkMode ? "bg-gray-800" : "bg-white"}`}>
+    <nav className={`h-screen ${darkMode ? "bg-gray-800" : "bg-white"}`}>
       <div
         className={`w-[72px] h-[72px] p-4 flex justify-center items-center ${
           darkMode && "text-white"
@@ -124,7 +124,7 @@ function SideBar() {
         }}
       >
         <nav
-          className={`w-[60vw] px-2 h-auto  bg-gray-10 ${
+          className={`w-[60vw] px-2 h-screen  bg-gray-10 ${
             darkMode ? "bg-gray-800" : "bg-white"
           } `}
         >
@@ -199,7 +199,7 @@ function SideBar() {
         }}
       >
         <nav
-          className={` ${
+          className={`h-screen ${
             !isMenuOpen && "hidden md:block md:w-56 lg:w-60"
           }  px-4 bg-gray-100  border-r border-r-gray-200 ${
             darkMode ? "bg-gray-800" : "bg-white"
