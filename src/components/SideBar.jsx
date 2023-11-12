@@ -95,10 +95,10 @@ function SideBar() {
   }
 
   return (
-    <nav className={`h-auto ${darkMode ? "bg-gray-800" : "bg-[#f7f7ff]"}`}>
+    <nav className={`h-auto ${darkMode ? "bg-gray-800" : "bg-white"}`}>
       <div
         className={`w-[72px] h-[72px] p-4 flex justify-center items-center ${
-          darkMode && "text-[#f7f7ff]"
+          darkMode && "text-white"
         }`}
       >
         <IconButton
@@ -125,13 +125,13 @@ function SideBar() {
       >
         <nav
           className={`w-[60vw] px-2 h-auto  bg-gray-10 ${
-            darkMode ? "bg-gray-800" : "bg-[#f7f7ff]"
+            darkMode ? "bg-gray-800" : "bg-white"
           } `}
         >
           <div className="w-full">
             <div
               className={`flex justify-between items-center sticky top-0 py-4 px-2  ${
-                darkMode ? "bg-gray-800" : "bg-[#f7f7ff]"
+                darkMode ? "bg-gray-800" : "bg-white"
               }`}
             >
               <a
@@ -151,7 +151,7 @@ function SideBar() {
           </div>
           <div
             className={`sticky bottom-0 ${
-              darkMode ? "bg-gray-800" : "bg-[#f7f7ff]"
+              darkMode ? "bg-gray-800" : "bg-white"
             }`}
           >
             <footer className="w-full py-2 sticky bottom-0">
@@ -162,7 +162,7 @@ function SideBar() {
                   className={` p-2 rounded-md  
                   ${
                     darkMode
-                      ? "text-gray-300 hover:bg-gray-700"
+                      ? "text-gray-200 hover:bg-gray-700"
                       : "hover:bg-gray-100"
                   } flex justify-start items-center font-medium duration-200`}
                 >
@@ -202,13 +202,13 @@ function SideBar() {
           className={` ${
             !isMenuOpen && "hidden md:block md:w-56 lg:w-60"
           }  px-4 bg-gray-100  border-r border-r-gray-200 ${
-            darkMode ? "bg-gray-800" : "bg-[#f7f7ff]"
+            darkMode ? "bg-gray-800" : "bg-white"
           }`}
         >
           <div className="w-full">
             <div
               className={`flex justify-between items-center sticky top-0 py-4 px-2  ${
-                darkMode ? "bg-gray-800" : "bg-[#f7f7ff]"
+                darkMode ? "bg-gray-800" : "bg-white"
               }`}
             >
               <a
@@ -227,7 +227,7 @@ function SideBar() {
           </div>
           <div
             className={`sticky bottom-0 ${
-              darkMode ? "bg-gray-800" : "bg-[#f7f7ff]"
+              darkMode ? "bg-gray-800" : "bg-white"
             }`}
           >
             <footer className="w-full py-2 sticky bottom-0">
@@ -239,7 +239,7 @@ function SideBar() {
                   ${
                     darkMode
                       ? "text-gray-300 hover:bg-gray-700"
-                      : "hover:bg-[#C8C6FF4D]"
+                      : "hover:bg-gray-100"
                   } flex justify-start items-center font-medium duration-200`}
                 >
                   <img
@@ -305,12 +305,12 @@ function SideBarContents({ departments, darkMode }) {
                   ? ` p-2 rounded-md text-sm ${
                       darkMode
                         ? "hover:bg-gray-700 bg-gray-600"
-                        : "bg-sidebar-pressed text-gray-100 hover:text-gray-700 hover:bg-[#C8C6FF4D]"
+                        : "bg-gray-200  hover:bg-gray-100"
                     } duration-200`
                   : `${
                       darkMode
                         ? "hover:bg-gray-700 text-gray-100"
-                        : "hover:bg-[#C8C6FF4D]"
+                        : "hover:bg-gray-100"
                     } p-2 rounded-md text-sm duration-200`
               }`}
             >
@@ -337,12 +337,12 @@ function SideBarContents({ departments, darkMode }) {
                   ? `p-2 rounded-md text-sm ${
                       darkMode
                         ? "hover:bg-gray-700 bg-gray-600"
-                        : "bg-sidebar-pressed text-gray-100 hover:text-gray-700 hover:bg-[#C8C6FF4D]"
+                        : "bg-gray-200  hover:bg-gray-100"
                     } duration-200`
                   : `${
                       darkMode
                         ? "hover:bg-gray-700 text-gray-100"
-                        : "hover:bg-[#C8C6FF4D]"
+                        : "hover:bg-gray-100"
                     } p-2 rounded-md text-sm duration-200`
               }`}
             >
@@ -369,9 +369,9 @@ function SideBarContents({ departments, darkMode }) {
                   ? ` duration-200 p-2 rounded-md text-sm ${
                       darkMode
                         ? "hover:bg-gray-700 bg-gray-600"
-                        : "bg-sidebar-pressed text-gray-100 hover:text-gray-700 hover:bg-[#C8C6FF4D]"
+                        : "bg-gray-200  hover:bg-gray-100"
                     }`
-                  : `hover:bg-[#C8C6FF4D] p-2 rounded-md text-sm ${
+                  : `hover:bg-gray-100 p-2 rounded-md text-sm ${
                       darkMode && "hover:bg-gray-600 text-gray-100"
                     } duration-200`
               }`}
@@ -391,10 +391,10 @@ function SideBarContents({ departments, darkMode }) {
                   duration-200 p-2 rounded-md ${
                     darkMode
                       ? "hover:bg-gray-600 bg-gray-700"
-                      : "bg-sidebar-pressed text-gray-100 hover:text-gray-700 hover:bg-[#C8C6FF4D]"
+                      : "bg-gray-200  hover:bg-gray-100"
                   } text-sm`
                   : `hover:${
-                      darkMode ? "bg-gray-600" : "bg-[#C8C6FF4D]"
+                      darkMode ? "bg-gray-600" : "bg-gray-100"
                     } p-2 rounded-md text-sm ${
                       darkMode ? "text-gray-100" : ""
                     } duration-200`
