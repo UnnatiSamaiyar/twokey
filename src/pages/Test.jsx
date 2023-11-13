@@ -146,6 +146,24 @@ const Test = () => {
       console.log("Error while getting ProfilePic.");
     }
   };
+
+  const getDepFiles = async () => {
+    try {
+      const files = await axios.get(
+        "https://twokeybackend.onrender.com/file/files/Marketing/",
+
+        {
+          headers: {
+            Authorization: `Bearer ${token.session.access_token}`,
+          },
+        }
+      );
+      console.log("files :", files);
+    } catch (error) {
+      console.log("Error while getting ProfilePic.", error);
+    }
+  };
+
   if (!sessionStorage.getItem("token")) {
     return <ErrorPage error="You are not authorised" />;
   }
@@ -200,6 +218,13 @@ const Test = () => {
         onClick={createDep}
       >
         createDep
+      </button>
+
+      <button
+        className="py-2 px-4 bg-green-400 text-white rounded-md"
+        onClick={getDepFiles}
+      >
+        getDepFiles
       </button>
 
       <div className="h-24 border overflow-y-scroll scrollbar-hide">

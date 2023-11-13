@@ -6,6 +6,7 @@ import { Dialog } from "@mui/material";
 import FileViewer from "../components/FileViewer";
 import { useAuth } from "../context/authContext";
 import DueDate from "../components/DueDate";
+import AccountFiles from "../components/AccountFiles";
 import LatestActivities from "../components/LatestActivities";
 
 import ErrorPage from "../components/ErrorPage";
@@ -27,7 +28,7 @@ const Dashboard = () => {
   }
   return (
     <div
-      className={`w-full py-4 px-2 h-screen  ${
+      className={`w-full p-4 h-screen ${
         darkMode ? "bg-gray-800 text-white" : "text-gray-800"
       }`}
     >
@@ -37,6 +38,7 @@ const Dashboard = () => {
       </div>
       <div>
         <RecentFiles />
+        <AccountFiles />
       </div>
       {/* <div className={`${screenshotDetected ? "blur" : ""}`}> */}
       <Dialog open={isFileViewerOpen} onClose={closeFileViewer} maxWidth="lg">
