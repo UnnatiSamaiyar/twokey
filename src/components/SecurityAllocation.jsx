@@ -5,6 +5,7 @@ import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import ProfilePicDummy from "../assets/profilePicDummy.jpg";
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} {...props} />
@@ -215,12 +216,19 @@ const SecurityAllocation = ({ handleSecurityAllocation, selectedUsers }) => {
               sx={{ display: "flex", justifyContent: "flex-between" }}
             >
               <p className="text-sm font-medium text-indigo-700">
-                {user.username}
+                {user.name} {user.last_name}
               </p>
 
-              <p className="text-xs font-medium text-green-900 bg-green-100 p-1 rounded-md">
-                Can Edit
-              </p>
+              <span className="flex flex-row gap-2 items-center">
+                <img
+                  src={user.profile_pic ? user.profile_pic : ProfilePicDummy}
+                  alt="Profile pic"
+                  className="h-6 w-6 rounded-md"
+                />
+                <p className="text-xs font-medium text-green-900 bg-green-100 p-1 rounded-md">
+                  Can Edit
+                </p>
+              </span>
             </AccordionSummary>
             <AccordionDetails className="bg-gray-100">
               <div>

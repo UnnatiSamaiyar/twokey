@@ -87,6 +87,25 @@ const Test = () => {
     }
   };
 
+  const createDep = async () => {
+    try {
+      const dep = await axios.post(
+        "https://twokeybackend.onrender.com/dept/createDepts/",
+        {
+          name: "Account",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token.session.access_token}`,
+          },
+        }
+      );
+      console.log("Dep :", dep);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getProfilePic = async () => {
     try {
       const { data } = supabase.storage
@@ -147,6 +166,13 @@ const Test = () => {
         onClick={getLogs}
       >
         Get Logs
+      </button>
+
+      <button
+        className="py-2 px-4 bg-pink-400 text-white rounded-md"
+        onClick={createDep}
+      >
+        createDep
       </button>
 
       {picture && (

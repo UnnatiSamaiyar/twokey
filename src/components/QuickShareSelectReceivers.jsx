@@ -8,6 +8,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
 import QuickShareSelectSecurityLevel from "./QuickShareSelectSecurityLevel";
+import ProfilePicDummy from "../assets/profilePicDummy.jpg";
 
 export default function QuickShareSelectReceivers({
   open,
@@ -54,7 +55,7 @@ export default function QuickShareSelectReceivers({
               {droppedFiles.map((file, index) => (
                 <li
                   key={file.name}
-                  className="text-xs bg-white border border-gray-200 border-b-2 border-b-green-600 rounded-md py-1 px-4 mb-1 flex items-center justify-between "
+                  className="text-xs bg-white border border-gray-200 border-b-2 border-b-green-600 rounded-sm py-1 px-4 mb-1 flex items-center justify-between "
                 >
                   <span>{file.name}</span>
                   <button
@@ -107,11 +108,22 @@ export default function QuickShareSelectReceivers({
                     }}
                   >
                     <span className="flex justify-between items-center w-full">
-                      <span>
-                        <p className="text-sm font-semibold">{user.email}</p>
-                        <p className="text-xs font-light text-gray-500">
-                          {user.email}
-                        </p>
+                      <span className="flex flex-row items-center gap-2">
+                        <img
+                          src={
+                            user.profile_pic
+                              ? user.profile_pic
+                              : ProfilePicDummy
+                          }
+                          alt="Profile pic"
+                          className="h-8 w-8 rounded-full"
+                        />
+                        <span>
+                          <p className="text-sm font-semibold">{user.name}</p>
+                          <p className="text-xs font-light text-gray-500">
+                            {user.email}
+                          </p>
+                        </span>
                       </span>
                       <p className="text-sm font-semibold">Invite › </p>
                     </span>
@@ -126,8 +138,15 @@ export default function QuickShareSelectReceivers({
                 key={user.id}
                 className="flex justify-between items-center w-full my-2"
               >
-                <span className="flex justify-between items-center bg-white rounded-full py-1 px-2 border gap-2">
-                  <p className="text-sm font-semibold">{user.email}</p>
+                <span className="flex items-center bg-white rounded-full py-1 px-2 border gap-2">
+                  <img
+                    src={user.profile_pic ? user.profile_pic : ProfilePicDummy}
+                    alt="Profile pic"
+                    className="h-6 w-6 rounded-full"
+                  />
+                  <p className="text-sm font-semibold">
+                    {user.name} {user.last_name}
+                  </p>
                   <button
                     onClick={() => handleRemoveUser(index)}
                     className="h-4 w-4 text-xs"
