@@ -56,9 +56,10 @@ const Onboarding = () => {
     department: "",
     firstName: "",
     lastName: "",
+    profileUrl: "",
     profilePicture: null,
   });
-  const [profilePicUrl, setProfilePicUrl] = useState("");
+
   const [isPictureSelected, setIsPictureSelected] = useState(false);
   const [departmentList, setDepartmentList] = useState([]);
   const navigate = useNavigate();
@@ -118,55 +119,95 @@ const Onboarding = () => {
     console.log("formData", formData);
   };
 
-  const handleNextButtonClick = async () => {
-    console.log(formData);
+  // const handleNextButtonClick = async () => {
+  //   console.log(formData);
 
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: formData.email,
-        password: formData.password,
-      });
+  //   try {
+  //     const { data, error } = await supabase.auth.signInWithPassword({
+  //       email: formData.email,
+  //       password: formData.password,
+  //     });
+  //     sessionStorage.setItem("token", JSON.stringify(data));
 
-      if (error) throw error;
+  //     if (error) throw error;
 
-      if (data) {
-        // Update user_info with firm data
+  //     // if (data) {
+  //     // Update user_info with firm data
 
-        handleProfilePictureUpload();
-        sessionStorage.setItem("token", JSON.stringify(data));
+  //     handleProfilePictureUpload(data);
 
-        let token = JSON.parse(sessionStorage.getItem("token"));
-        if (token) {
-          const res = await axios.put(
-            "https://twokeybackend.onrender.com/users/updateProfile/",
-            {
-              id: token.user.id,
-              username: formData.username,
-              name: formData.firstName,
-              last_name: formData.lastName,
-              dept: "7075576d-bbbc-47f7-9b50-a272e93dc66f",
-              profile_pic: profilePicUrl,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token.session.access_token}`,
-              },
-            }
-          );
+  //     // let token = JSON.parse(sessionStorage.getItem("token"));
+  //     if (data) {
+  //       let body = {
+  //         id: data.user.id,
+  //         username: formData.username,
+  //         name: formData.firstName,
+  //         last_name: formData.lastName,
+  //         dept: "7075576d-bbbc-47f7-9b50-a272e93dc66f",
+  //         profile_pic: formData.profileUrl,
+  //       };
+  //       console.log("onboarding body:", body);
+  //       try {
+  //         const res = await axios.put(
+  //           "https://twokeybackend.onrender.com/users/updateProfile/",
+  //           body,
+  //           {
+  //             headers: {
+  //               Authorization: `Bearer ${data.session.access_token}`,
+  //             },
+  //           }
+  //         );
 
-          console.log("onboarding success:", res);
+  //         console.log("onboarding success:", res);
+  //       } catch (error) {
+  //         console.log("Error at  update profile:", error);
+  //       }
 
-          // console.log("Profile data:", res.data);
-          // localStorage.setItem("profileData", JSON.stringify(res.data));
-        }
-        navigate("/dashboard");
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  };
+  //       // console.log("Profile data:", res.data);
+  //       // localStorage.setItem("profileData", JSON.stringify(res.data));
+  //     }
+  //     // navigate("/dashboard");
+  //     // }
+  //   } catch (error) {
+  //     console.log("Error at onboarding", error);
+  //   }
+  // };
 
-  const handleProfilePictureUpload = async () => {
+  // const handleProfilePictureUpload = async (token) => {
+  //   try {
+  //     const { data, error } = await supabase.storage
+  //       .from("avatar")
+  //       .upload(formData.email, formData.profilePicture, {
+  //         cacheControl: "3600",
+  //         upsert: false,
+  //       });
+
+  //     console.log("File uploaded successfully:", data);
+
+  //     if (error) {
+  //       throw error;
+  //     }
+
+  //     const { data: url } = await supabase.storage
+  //       .from("avatar")
+  //       .getPublicUrl(formData.email);
+
+  //     console.log("Public URL:", url.publicUrl);
+
+  //     // Set the publicUrl as profile_pic in the formData
+  //     setFormData({
+  //       ...formData,
+  //       profileUrl: url.publicUrl,
+  //     });
+  //   } catch (error) {
+  //     console.error(
+  //       "An error occurred while uploading the profile picture:",
+  //       error
+  //     );
+  //   }
+  // };
+
+  const handleProfilePictureUpload = async (token) => {
     try {
       const { data, error } = await supabase.storage
         .from("avatar")
@@ -175,28 +216,82 @@ const Onboarding = () => {
           upsert: false,
         });
 
+      console.log("File uploaded successfully:", data);
+
       if (error) {
-        console.error("Error occurred in file upload:", error);
-      } else {
-        // console.log("File uploaded successfully:", data);
-
-        let token = JSON.parse(sessionStorage.getItem("token"));
-
-        try {
-          const { data } = supabase.storage
-            .from("avatar")
-            .getPublicUrl(token.user.email);
-
-          setProfilePicUrl(data.publicUrl);
-        } catch (error) {
-          console.log("Error while getting ProfilePic.");
-        }
+        throw error;
       }
+
+      const { data: url } = await supabase.storage
+        .from("avatar")
+        .getPublicUrl(formData.email);
+
+      console.log("Public URL:", url.publicUrl);
+
+      // Return the publicUrl
+      return url.publicUrl;
     } catch (error) {
       console.error(
         "An error occurred while uploading the profile picture:",
         error
       );
+      // Return null or handle the error as needed
+      return null;
+    }
+  };
+
+  const handleNextButtonClick = async () => {
+    console.log(formData);
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
+      sessionStorage.setItem("token", JSON.stringify(data));
+
+      if (error) throw error;
+
+      if (data) {
+        // Handle profile picture upload and get the updated profileUrl
+        const updatedProfileUrl = await handleProfilePictureUpload(data);
+
+        // Update the formData with the new profileUrl
+        setFormData({
+          ...formData,
+          profileUrl: updatedProfileUrl,
+        });
+
+        // Once profile picture is uploaded, update user_info with firm data
+        let body = {
+          id: data.user.id,
+          username: formData.username,
+          name: formData.firstName,
+          last_name: formData.lastName,
+          dept: "7075576d-bbbc-47f7-9b50-a272e93dc66f",
+          profile_pic: updatedProfileUrl,
+        };
+        console.log("onboarding body:", body);
+        try {
+          const res = await axios.put(
+            "https://twokeybackend.onrender.com/users/updateProfile/",
+            body,
+            {
+              headers: {
+                Authorization: `Bearer ${data.session.access_token}`,
+              },
+            }
+          );
+
+          console.log("onboarding success:", res);
+          localStorage.setItem("profileData", JSON.stringify(res.data));
+        } catch (error) {
+          console.log("Error at  update profile:", error);
+        }
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      console.log("Error at onboarding", error);
     }
   };
 

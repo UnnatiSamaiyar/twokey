@@ -15,6 +15,7 @@ import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import axios from "axios";
 import { supabase } from "../helper/supabaseClient";
+import { useLocation } from "react-router-dom";
 
 // Define the formatFileSize function
 function formatFileSize(sizeInBytes) {
@@ -29,6 +30,7 @@ function formatFileSize(sizeInBytes) {
 }
 
 const AccountFiles = () => {
+  const location = useLocation();
   const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
@@ -58,6 +60,7 @@ const AccountFiles = () => {
                 id: file.id,
                 name: file.name.substring(0, 80),
                 size: formatFileSize(file.metadata.size),
+                dept: file.dept_name,
                 publicUrl: data.publicUrl,
                 owner: file.owner_email,
                 mimetype: file.metadata.mimetype,
@@ -83,10 +86,11 @@ const AccountFiles = () => {
 
           const resolvedFiles = await Promise.all(mappedFiles);
           const filteredFiles = resolvedFiles.filter((file) => file !== null);
-          console.log("Files:", filteredFiles);
+          // console.log("Files:", filteredFiles);
 
           // Set the filtered files to the state
-          setFilteredData(filteredFiles);
+          // setFilteredData(filteredFiles);
+          localStorage.setItem("filteredFiles", JSON.stringify(filteredFiles));
         }
       } catch (error) {
         console.error("Error fetching files:", error);
@@ -95,6 +99,24 @@ const AccountFiles = () => {
 
     fetchRecentFiles();
   }, []);
+
+  useEffect(() => {
+    let data = localStorage.getItem("filteredFiles");
+    console.log("filtered files:", JSON.parse(data));
+    // console.log("Location:", location.pathname.slice(1));
+    setFilteredData(JSON.parse(data));
+  }, []);
+
+  // useEffect(() => {
+  //   let data = localStorage.getItem("filteredFiles");
+  //   const parsedData = JSON.parse(data);
+  //   const filteredByLocation = parsedData.filter((file) =>
+  //     file.dept.toLowerCase() === location.pathname.slice(1).toLowerCase()
+  //   );
+
+  //   console.log("filtered files:", filteredByLocation);
+  //   setFilteredData(filteredByLocation);
+  // }, [location.pathname]);
 
   return (
     <div className="text-center">
@@ -109,14 +131,14 @@ const AccountFiles = () => {
                 <TableCell>OWNER</TableCell>
                 <TableCell align="center">
                   STATUS
-                  <b className="text-gray-50 text-xs bg-gray-500 rounded-full px-1 mx-1">
+                  <b className="text-gray-50 text-xs bg-gray-500 rounded-full px-[5px] mx-1">
                     i
                   </b>
                 </TableCell>
                 <TableCell align="center">SIZE</TableCell>
                 <TableCell align="center">
                   SECURITY
-                  <b className="text-gray-50 text-xs bg-gray-500 rounded-full px-1 mx-1">
+                  <b className="text-gray-50 text-xs bg-gray-500 rounded-full px-[5px] mx-1">
                     i
                   </b>
                 </TableCell>
@@ -124,9 +146,8 @@ const AccountFiles = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredData.map((row) => (
-                <Row key={row.id} row={row} />
-              ))}
+              {filteredData &&
+                filteredData.map((row) => <Row key={row.id} row={row} />)}
             </TableBody>
           </Table>
         </TableContainer>
