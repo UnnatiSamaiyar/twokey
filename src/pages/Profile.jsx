@@ -20,24 +20,6 @@ const Profile = () => {
     setProfileData(JSON.parse(data));
   }, []);
 
-  // useEffect(() => {
-  //   let token = JSON.parse(sessionStorage.getItem("token"));
-
-  //   const getProfilePic = async () => {
-  //     try {
-  //       const { data } = supabase.storage
-  //         .from("avatar")
-  //         .getPublicUrl(token.user.email);
-
-  //       setPicture(data.publicUrl);
-  //     } catch (error) {
-  //       console.log("Error while getting ProfilePic.");
-  //     }
-  //   };
-
-  //   getProfilePic();
-  // }, []);
-
   const toggleEditing = () => {
     if (isEditing) {
       // If in editing mode, upload the selected picture

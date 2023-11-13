@@ -55,6 +55,33 @@ const Test = () => {
   //   }
   // };
 
+  let departments = [
+    { name: "Account", path: "/account" },
+    { name: "Finance", path: "/finance" },
+    { name: "Development", path: "/development" },
+    { name: "Manufacturing", path: "/manufacturing" },
+    { name: "Sales", path: "/sales" },
+    { name: "Human Resources", path: "/humanresources" },
+    { name: "Account", path: "/account" },
+    { name: "Finance", path: "/finance" },
+    { name: "Development", path: "/development" },
+    { name: "Manufacturing", path: "/manufacturing" },
+    { name: "Sales", path: "/sales" },
+    { name: "Human Resources", path: "/humanresources" },
+    { name: "Account", path: "/account" },
+    { name: "Finance", path: "/finance" },
+    { name: "Development", path: "/development" },
+    { name: "Manufacturing", path: "/manufacturing" },
+    { name: "Sales", path: "/sales" },
+    { name: "Human Resources", path: "/humanresources" },
+    { name: "Account", path: "/account" },
+    { name: "Finance", path: "/finance" },
+    { name: "Development", path: "/development" },
+    { name: "Manufacturing", path: "/manufacturing" },
+    { name: "Sales", path: "/sales" },
+    { name: "Human Resources", path: "/humanresources" },
+  ];
+
   const getLogs = async () => {
     try {
       const users = await axios.get(
@@ -174,6 +201,12 @@ const Test = () => {
       >
         createDep
       </button>
+
+      <div className="h-24 border overflow-y-scroll scrollbar-hide">
+        {departments.map((dep, index) => (
+          <p key={index}>{dep.name}</p>
+        ))}
+      </div>
 
       {picture && (
         <img

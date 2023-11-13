@@ -1,7 +1,7 @@
 function Background() {
   return (
     <div
-      className="absolute w-full inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden"
+      className="fixed w-full inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden"
       aria-hidden="true"
     >
       <div
