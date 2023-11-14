@@ -106,6 +106,9 @@ const FileDrawer = ({
         }
       );
       console.log("presignedUrl:", presignedUrl.data.signed_url);
+      localStorage.setItem("preUrl", presignedUrl.data.signed_url);
+
+      toggleFileViewer();
     } catch (error) {
       console.log("Error while getPresignedUrl", error);
     }
@@ -162,12 +165,12 @@ const FileDrawer = ({
             <p>date</p>
           </span>
         </span>
-        <button
+        {/* <button
           className="bg-green-600 text-white py-1 px-4 rounded-md w-full my-2"
           onClick={toggleFileViewer}
         >
           Open
-        </button>
+        </button> */}
         <button
           className="bg-blue-600 text-white py-1 px-4 rounded-md w-full my-2"
           onClick={getPresignedUrl}
