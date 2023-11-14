@@ -127,7 +127,7 @@ export default function QuickShareSelectSecurityLevel({
           expiration_time: securityAllotmentData[0].timeDifference,
           security_check: {
             download_enabled: true,
-            geo_enabled: "bd4e30d2-c42a-428b-b196-6fcda9847634",
+            geo_enabled: securityAllotmentData[0].location,
           },
         },
         {

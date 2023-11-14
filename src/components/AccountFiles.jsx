@@ -69,6 +69,7 @@ const AccountFiles = () => {
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
+  const [Logs, setLogs] = useState([]);
 
   const getLogs = async (fileId) => {
     try {
@@ -81,7 +82,8 @@ function Row(props) {
           },
         }
       );
-      console.log(`Logs of id ( ${fileId} ) :`, accessLogs);
+      console.log(`Logs of id ( ${fileId} ) :`, accessLogs.data);
+      setLogs(accessLogs.data);
     } catch (error) {
       console.log(error);
     }
@@ -93,6 +95,20 @@ function Row(props) {
     if (!open) {
       await getLogs(row.id);
     }
+  };
+
+  const formatTimestamp = (timestamp) => {
+    const options = {
+      timeZone: "Asia/Kolkata", // Indian Standard Time (IST)
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+    };
+
+    return new Date(timestamp).toLocaleString("en-IN", options);
   };
 
   return (
@@ -147,7 +163,20 @@ function Row(props) {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
-                {row.publicUrl}
+                {Logs.length > 0 ? (
+                  Logs.map((log, index) => (
+                    <div key={index}>
+                      <p className="text-sm">
+                        <strong>{log.username}</strong> Accessed the file{" "}
+                        <span className="text-gray-600">
+                          on {formatTimestamp(log.timestamp)}
+                        </span>
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <p>No logs found!</p>
+                )}
               </Typography>
               <Typography variant="body2" gutterBottom component="div">
                 {/* Display additional details if needed */}

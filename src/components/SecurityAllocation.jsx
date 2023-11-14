@@ -307,10 +307,7 @@ const SecurityAllocation = ({ handleSecurityAllocation, selectedUsers }) => {
                     <em>None</em>
                   </MenuItem>
                   {coordinates.map((location) => (
-                    <MenuItem
-                      key={location.id}
-                      value={location.geometry.coordinates}
-                    >
+                    <MenuItem key={location.id} value={location.id}>
                       {location.properties.name}
                     </MenuItem>
                   ))}
