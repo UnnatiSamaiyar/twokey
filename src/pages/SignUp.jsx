@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../helper/supabaseClient";
-import { TextField } from "@mui/material";
+import { TextField, useMediaQuery } from "@mui/material";
 import axios from "axios";
 
 import ErrorPage from "../components/ErrorPage";
@@ -11,8 +11,10 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 
 import twokeyLanding from "../assets/twokeyLanding.png";
+import twokeySignup from "../assets/twokeySignup.png";
 
 const SignUp = () => {
+  const isSmallScreen = useMediaQuery("(max-width:600px)");
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -85,13 +87,15 @@ const SignUp = () => {
 
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="w-full md:w-1/2">
-        <img
-          className="h-screen w-screen"
-          src={twokeyLanding}
-          alt="twokeyLandingImage"
-        />
-      </div>
+      {!isSmallScreen && (
+        <div className="w-full md:w-1/2">
+          <img
+            className="h-screen w-screen"
+            src={twokeySignup}
+            alt="twokeySignupImage"
+          />
+        </div>
+      )}
 
       <div className="bg-white flex flex-col justify-center items-center w-full md:w-1/2">
         <h1 className="text-5xl text-center mt-8 font-semibold ">
