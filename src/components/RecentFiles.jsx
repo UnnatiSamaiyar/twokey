@@ -15,10 +15,12 @@ const RecentFiles = () => {
   const [selectedFileName, setSelectedFileName] = useState("");
   const [selectedFileSize, setSelectedFileSize] = useState("");
   const [loading, setLoading] = useState(true);
+  const [selectedFileId, setSelectedFileId] = useState("");
 
-  const openDrawer = (fileName, fileSize) => {
+  const openDrawer = (fileName, fileSize, fileId) => {
     setSelectedFileName(fileName);
     setSelectedFileSize(fileSize);
+    setSelectedFileId(fileId);
     setIsDrawerOpen(true);
   };
 
@@ -91,7 +93,7 @@ const RecentFiles = () => {
               <div
                 key={index}
                 className="border border-gray-200 p-2 rounded-lg shadow-md cursor-pointer"
-                onClick={() => openDrawer(file.name, file.size)}
+                onClick={() => openDrawer(file.name, file.size, file.id)}
               >
                 <img
                   src={PDFPreview}
@@ -124,6 +126,7 @@ const RecentFiles = () => {
         closeDrawer={closeDrawer}
         selectedFileName={selectedFileName}
         selectedFileSize={selectedFileSize}
+        selectedFileId={selectedFileId}
       />
     </div>
   );

@@ -175,7 +175,7 @@ function Row(props) {
                     </div>
                   ))
                 ) : (
-                  <p>No logs found!</p>
+                  <p className="text-center">No logs found!</p>
                 )}
               </Typography>
               <Typography variant="body2" gutterBottom component="div">

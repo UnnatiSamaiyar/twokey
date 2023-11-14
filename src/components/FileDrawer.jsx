@@ -5,12 +5,14 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { supabase } from "../helper/supabaseClient";
 import { useAuth } from "../context/authContext";
 import PDFPreview from "../assets/pdfPreview.jpg";
+import axios from "axios";
 
 const FileDrawer = ({
   isDrawerOpen,
   closeDrawer,
   selectedFileName,
   selectedFileSize,
+  selectedFileId,
 }) => {
   const [screenshotDetected, setScreenshotDetected] = useState(false);
 
@@ -86,6 +88,29 @@ const FileDrawer = ({
     }
   };
 
+  const getPresignedUrl = async () => {
+    try {
+      let token = JSON.parse(sessionStorage.getItem("token"));
+
+      const body = {
+        latitude: 18.44623721673684,
+        longitude: 73.82762833796289,
+      };
+      const presignedUrl = await axios.post(
+        `https://twokeybackend.onrender.com/file/getPresigned/${selectedFileId}/`,
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${token.session.access_token}`,
+          },
+        }
+      );
+      console.log("presignedUrl:", presignedUrl.data.signed_url);
+    } catch (error) {
+      console.log("Error while getPresignedUrl", error);
+    }
+  };
+
   return (
     <Drawer anchor="right" open={isDrawerOpen} onClose={closeDrawer}>
       <div
@@ -102,6 +127,7 @@ const FileDrawer = ({
             <img src={PDFPreview} alt="preview" />
           </div>
           <h2>{selectedFileName}</h2>
+          {/* <h2>{selectedFileId}</h2> */}
         </div>
         <hr className="my-2" />
         <h4 className="font-semibold text-sm text-gray-900">Description</h4>
@@ -139,6 +165,12 @@ const FileDrawer = ({
         <button
           className="bg-green-600 text-white py-1 px-4 rounded-md w-full my-2"
           onClick={toggleFileViewer}
+        >
+          Open
+        </button>
+        <button
+          className="bg-blue-600 text-white py-1 px-4 rounded-md w-full my-2"
+          onClick={getPresignedUrl}
         >
           Open
         </button>
