@@ -253,16 +253,13 @@ const Onboarding = () => {
       if (error) throw error;
 
       if (data) {
-        // Handle profile picture upload and get the updated profileUrl
         const updatedProfileUrl = await handleProfilePictureUpload(data);
 
-        // Update the formData with the new profileUrl
         setFormData({
           ...formData,
           profileUrl: updatedProfileUrl,
         });
 
-        // Once profile picture is uploaded, update user_info with firm data
         let body = {
           id: data.user.id,
           username: formData.username,

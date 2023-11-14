@@ -13,7 +13,7 @@ export default function QuickShare() {
   const [reviewOpen, setReviewOpen] = useState(false);
   const [droppedFiles, setDroppedFiles] = useState([]);
   const [customFileName, setCustomFileName] = useState("");
-  const { listUsers } = useAuth();
+  const { listUsers, listLocations } = useAuth();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -127,6 +127,7 @@ export default function QuickShare() {
             onClick={() => {
               handleUpload();
               listUsers();
+              listLocations();
             }}
             className="bg-blue-700 text-white py-1 px-3 rounded-lg"
           >

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "../context/authContext";
 import { styled } from "@mui/material/styles";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
@@ -47,10 +48,11 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 }));
 
 const SecurityAllocation = ({ handleSecurityAllocation, selectedUsers }) => {
-  const [inputData, setInputData] = useState(""); // State to store input data
+  const [inputData, setInputData] = useState("");
   const [expanded, setExpanded] = useState(null);
   const [formData, setFormData] = useState({});
-  const [currentTime, setCurrentTime] = useState(""); // State to store the current time
+  const [currentTime, setCurrentTime] = useState("");
+  const { coordinates } = useAuth();
 
   const handleFormdataChange = (event, index) => {
     const { name, value } = event.target;
@@ -194,6 +196,7 @@ const SecurityAllocation = ({ handleSecurityAllocation, selectedUsers }) => {
 
       //   console.log(userTimeData);
       handleSecurityAllocation(userTimeData);
+      console.log("at security", coordinates);
     };
 
     handleConsoleUserData();
@@ -291,6 +294,7 @@ const SecurityAllocation = ({ handleSecurityAllocation, selectedUsers }) => {
 
               <div>
                 <p className="text-sm my-2">Location</p>
+
                 <Select
                   name="location"
                   value={formData[index]?.location || ""}
@@ -302,8 +306,14 @@ const SecurityAllocation = ({ handleSecurityAllocation, selectedUsers }) => {
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  <MenuItem value="Office1">Office1</MenuItem>
-                  <MenuItem value="Office2">Office2</MenuItem>
+                  {coordinates.map((location) => (
+                    <MenuItem
+                      key={location.id}
+                      value={location.geometry.coordinates}
+                    >
+                      {location.properties.name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </div>
             </AccordionDetails>

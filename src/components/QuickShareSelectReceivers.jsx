@@ -7,6 +7,7 @@ import { useAuth } from "../context/authContext";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
+import Skeleton from "@mui/material/Skeleton";
 import QuickShareSelectSecurityLevel from "./QuickShareSelectSecurityLevel";
 import ProfilePicDummy from "../assets/profilePicDummy.jpg";
 

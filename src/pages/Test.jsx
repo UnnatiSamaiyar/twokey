@@ -6,7 +6,7 @@ import { supabase } from "../helper/supabaseClient";
 import ErrorPage from "../components/ErrorPage";
 
 const Test = () => {
-  const { token, location, error, getGeolocation } = useAuth();
+  const { token, location, error, getGeolocation, listLocations } = useAuth();
   const [picture, setPicture] = useState(null);
 
   // console.log("position in profile", location);
@@ -164,6 +164,34 @@ const Test = () => {
     }
   };
 
+  // const listLocations = async () => {
+  //   try {
+  //     const locations = await axios.get(
+  //       "https://twokeybackend.onrender.com/file/file/listLocation/",
+
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token.session.access_token}`,
+  //         },
+  //       }
+  //     );
+
+  //     // locations.data.features.map((items) =>
+  //     //   console.log(
+  //     //     "id:",
+  //     //     items.id,
+  //     //     "location:",
+  //     //     items.geometry.coordinates[0],
+  //     //     items.geometry.coordinates[1]
+  //     //   )
+  //     // );
+
+  //     console.log("locations :", locations.data.features);
+  //   } catch (error) {
+  //     console.log("Error while listing location Coordinates.", error);
+  //   }
+  // };
+
   if (!sessionStorage.getItem("token")) {
     return <ErrorPage error="You are not authorised" />;
   }
@@ -227,6 +255,13 @@ const Test = () => {
         getDepFiles
       </button>
 
+      <button
+        className="py-2 px-4 bg-yellow-400 text-white rounded-md"
+        onClick={listLocations}
+      >
+        listLocations
+      </button>
+
       <div className="h-24 border overflow-y-scroll scrollbar-hide">
         {departments.map((dep, index) => (
           <p key={index}>{dep.name}</p>
@@ -273,3 +308,52 @@ export default Test;
 //       }
 //   }
 // },[])
+
+// useEffect(() => {
+//   let data = localStorage.getItem("filteredFiles");
+//   const parsedData = JSON.parse(data);
+//   const filteredByLocation = parsedData.filter((file) =>
+//     file.dept.toLowerCase() === location.pathname.slice(1).toLowerCase()
+//   );
+
+//   console.log("filtered files:", filteredByLocation);
+//   setFilteredData(filteredByLocation);
+// }, [location.pathname]);
+
+{
+  /* <MenuItem disabled>
+                  <span className="flex justify-between items-center w-full">
+                    <span className="flex flex-row items-center gap-2">
+                      <Skeleton
+                        variant="circular"
+                        height={35}
+                        width={35}
+                        sx={{ bgcolor: "grey.500" }}
+                      />
+                      <span>
+                        <p className="text-sm font-semibold">
+                          <Skeleton
+                            width={100}
+                            height={25}
+                            sx={{ bgcolor: "grey.500" }}
+                          />
+                        </p>
+                        <p className="text-xs font-light text-gray-500">
+                          <Skeleton
+                            width={150}
+                            height={20}
+                            sx={{ bgcolor: "grey.500" }}
+                          />
+                        </p>
+                      </span>
+                    </span>
+                    <p className="text-sm font-semibold">
+                      <Skeleton
+                        width={60}
+                        height={30}
+                        sx={{ bgcolor: "grey.500" }}
+                      />
+                    </p>
+                  </span>
+                </MenuItem> */
+}

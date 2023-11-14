@@ -17,88 +17,9 @@ import axios from "axios";
 import { supabase } from "../helper/supabaseClient";
 import { useLocation } from "react-router-dom";
 
-// Define the formatFileSize function
-function formatFileSize(sizeInBytes) {
-  const units = ["B", "KB", "MB", "GB"];
-  let size = sizeInBytes;
-  let unitIndex = 0;
-  while (size >= 1024 && unitIndex < units.length - 1) {
-    size /= 1024;
-    unitIndex++;
-  }
-  return size.toFixed(2) + " " + units[unitIndex];
-}
-
 const AccountFiles = () => {
   const location = useLocation();
   const [filteredData, setFilteredData] = useState([]);
-
-  useEffect(() => {
-    async function fetchRecentFiles() {
-      try {
-        let token = JSON.parse(sessionStorage.getItem("token"));
-
-        const recentFilesFromBackend = await axios.get(
-          "https://twokeybackend.onrender.com/file/files/",
-          {
-            headers: {
-              Authorization: `Bearer ${token.session.access_token}`,
-            },
-          }
-        );
-
-        console.log("recentFilesFromBackend", recentFilesFromBackend);
-
-        if (recentFilesFromBackend) {
-          const mappedFiles = recentFilesFromBackend.data.map(async (file) => {
-            try {
-              const { data } = await supabase.storage
-                .from("avatar")
-                .getPublicUrl(file.owner_email);
-
-              return {
-                id: file.id,
-                name: file.name.substring(0, 80),
-                size: formatFileSize(file.metadata.size),
-                dept: file.dept_name,
-                publicUrl: data.publicUrl,
-                owner: file.owner_email,
-                mimetype: file.metadata.mimetype,
-                status: "Team",
-                security: "Enhanced",
-                lastUpdate: new Date(file.metadata.lastModified).toLocaleString(
-                  "en-IN",
-                  {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                    hour: "numeric",
-                    minute: "numeric",
-                    hour12: true,
-                  }
-                ),
-              };
-            } catch (error) {
-              console.log("Error while getting public URL:", error);
-              return null;
-            }
-          });
-
-          const resolvedFiles = await Promise.all(mappedFiles);
-          const filteredFiles = resolvedFiles.filter((file) => file !== null);
-          // console.log("Files:", filteredFiles);
-
-          // Set the filtered files to the state
-          // setFilteredData(filteredFiles);
-          localStorage.setItem("filteredFiles", JSON.stringify(filteredFiles));
-        }
-      } catch (error) {
-        console.error("Error fetching files:", error);
-      }
-    }
-
-    fetchRecentFiles();
-  }, []);
 
   useEffect(() => {
     let data = localStorage.getItem("filteredFiles");
@@ -106,17 +27,6 @@ const AccountFiles = () => {
     // console.log("Location:", location.pathname.slice(1));
     setFilteredData(JSON.parse(data));
   }, []);
-
-  // useEffect(() => {
-  //   let data = localStorage.getItem("filteredFiles");
-  //   const parsedData = JSON.parse(data);
-  //   const filteredByLocation = parsedData.filter((file) =>
-  //     file.dept.toLowerCase() === location.pathname.slice(1).toLowerCase()
-  //   );
-
-  //   console.log("filtered files:", filteredByLocation);
-  //   setFilteredData(filteredByLocation);
-  // }, [location.pathname]);
 
   return (
     <div className="text-center">
@@ -160,11 +70,36 @@ function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
 
+  const getLogs = async (fileId) => {
+    try {
+      let token = JSON.parse(sessionStorage.getItem("token"));
+      const accessLogs = await axios.get(
+        `https://twokeybackend.onrender.com/file/getLogs/access/${fileId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.session.access_token}`,
+          },
+        }
+      );
+      console.log(`Logs of id ( ${fileId} ) :`, accessLogs);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleRowClick = async () => {
+    setOpen(!open);
+    // Call getLogs only if the row is opened
+    if (!open) {
+      await getLogs(row.id);
+    }
+  };
+
   return (
     <React.Fragment>
       <TableRow
         sx={{ "& > *": { borderBottom: "unset" }, cursor: "pointer" }}
-        onClick={() => setOpen(!open)}
+        onClick={handleRowClick}
       >
         <TableCell>
           <IconButton

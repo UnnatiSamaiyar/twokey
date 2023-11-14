@@ -40,7 +40,7 @@ const LatestActivities = () => {
 
   return (
     <div className="w-2/5">
-      <Paper className="h-64 ">
+      <Paper className="h-72 ">
         <div className="flex justify-between items-center p-4">
           <span className="flex flex-row items-center gap-1">
             <p className="text-sm font-semibold">Latest Activities</p>
@@ -60,7 +60,7 @@ const LatestActivities = () => {
           </span>
         </div>
 
-        <div className="h-48 overflow-y-scroll scrollbar-hide">
+        <div className="h-56 overflow-y-scroll scrollbar-hide">
           {departments.map((dep, index) => (
             <p key={index} className="p-2 border-b">
               {dep.name}

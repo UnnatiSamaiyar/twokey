@@ -1,4 +1,15 @@
+import { useLocation } from "react-router-dom";
+
 function Background() {
+  const location = useLocation();
+  const hideBackground =
+    location.pathname === "/" ||
+    location.pathname === "/signup" ||
+    location.pathname === "/onboarding";
+
+  if (hideBackground) {
+    return null;
+  }
   return (
     <div
       className="fixed w-full inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden"

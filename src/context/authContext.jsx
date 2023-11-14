@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+import { supabase } from "../helper/supabaseClient";
 
 const AuthContext = createContext();
 
@@ -10,6 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
   const [location, setLocation] = useState(null);
   const [error, setError] = useState(null);
+  const [coordinates, setCoordinates] = useState([]);
 
   useEffect(() => {
     // Prevent right-click
@@ -108,6 +110,84 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  useEffect(() => {
+    async function fetchRecentFiles() {
+      try {
+        let token = JSON.parse(sessionStorage.getItem("token"));
+
+        const recentFilesFromBackend = await axios.get(
+          "https://twokeybackend.onrender.com/file/files/",
+          {
+            headers: {
+              Authorization: `Bearer ${token.session.access_token}`,
+            },
+          }
+        );
+
+        // console.log("recentFilesFromBackend", recentFilesFromBackend);
+
+        if (recentFilesFromBackend) {
+          const mappedFiles = recentFilesFromBackend.data.map(async (file) => {
+            try {
+              const { data } = await supabase.storage
+                .from("avatar")
+                .getPublicUrl(file.owner_email);
+
+              return {
+                id: file.id,
+                name: file.name.substring(0, 80),
+                size: formatFileSize(file.metadata.size),
+                dept: file.dept_name,
+                publicUrl: data.publicUrl,
+                owner: file.owner_email,
+                mimetype: file.metadata.mimetype,
+                status: "Team",
+                security: "Enhanced",
+                lastUpdate: new Date(file.metadata.lastModified).toLocaleString(
+                  "en-IN",
+                  {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                    hour12: true,
+                  }
+                ),
+              };
+            } catch (error) {
+              console.log("Error while getting public URL:", error);
+              return null;
+            }
+          });
+
+          const resolvedFiles = await Promise.all(mappedFiles);
+          const filteredFiles = resolvedFiles.filter((file) => file !== null);
+          // console.log("Files:", filteredFiles);
+
+          // Set the filtered files to the state
+          // setFilteredData(filteredFiles);
+          localStorage.setItem("filteredFiles", JSON.stringify(filteredFiles));
+        }
+      } catch (error) {
+        console.error("Error fetching files:", error);
+      }
+    }
+
+    fetchRecentFiles();
+  }, []);
+
+  function formatFileSize(sizeInBytes) {
+    const units = ["B", "KB", "MB", "GB"];
+    let size = sizeInBytes;
+    let unitIndex = 0;
+    while (size >= 1024 && unitIndex < units.length - 1) {
+      size /= 1024;
+      unitIndex++;
+    }
+    return size.toFixed(2) + " " + units[unitIndex];
+  }
+
   const getProfileData = async () => {
     try {
       let token = JSON.parse(sessionStorage.getItem("token"));
@@ -188,6 +268,35 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const listLocations = async () => {
+    try {
+      const locations = await axios.get(
+        "https://twokeybackend.onrender.com/file/file/listLocation/",
+
+        {
+          headers: {
+            Authorization: `Bearer ${token.session.access_token}`,
+          },
+        }
+      );
+
+      // locations.data.features.map((items) =>
+      //   console.log(
+      //     "id:",
+      //     items.id,
+      //     "location:",
+      //     items.geometry.coordinates[0],
+      //     items.geometry.coordinates[1]
+      //   )
+      // );
+
+      // console.log("locations :", locations.data.features);
+      setCoordinates(locations.data.features);
+    } catch (error) {
+      console.log("Error while listing location Coordinates.", error);
+    }
+  };
+
   const contextValue = {
     isFileViewerOpen,
     openFileViewer,
@@ -202,6 +311,8 @@ export const AuthProvider = ({ children }) => {
     listUsers,
     users,
     getProfileData,
+    listLocations,
+    coordinates,
   };
 
   return (
