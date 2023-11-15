@@ -140,7 +140,7 @@ function Row(props) {
           <p className="text-indigo-600 font-medium">{row.name}</p>
         </TableCell>
         <TableCell align="center">
-          <Tooltip title={row.owner}>
+          <Tooltip title={row.owner} arrow>
             <img
               src={row.publicUrl}
               alt="Owner"

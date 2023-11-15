@@ -98,6 +98,38 @@ const Test = () => {
     }
   };
 
+  const getCommonLogs = async () => {
+    try {
+      const users = await axios.get(
+        "https://twokeybackend.onrender.com/file/getLogs/access",
+        {
+          headers: {
+            Authorization: `Bearer ${token.session.access_token}`,
+          },
+        }
+      );
+      console.log("users :", users);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getSharedFileInfo = async () => {
+    try {
+      const info = await axios.get(
+        "https://twokeybackend.onrender.com/file/sharedFileInfo/2fa789e7-7443-4c7c-8297-53a932982481",
+        {
+          headers: {
+            Authorization: `Bearer ${token.session.access_token}`,
+          },
+        }
+      );
+      console.log("getSharedFileInfo :", info);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const listUsers = async () => {
     try {
       const users = await axios.get(
@@ -240,6 +272,12 @@ const Test = () => {
       >
         Get Logs
       </button>
+      <button
+        className="py-2 px-4 bg-orange-400 text-white rounded-md"
+        onClick={getCommonLogs}
+      >
+        getCommonLogs
+      </button>
 
       <button
         className="py-2 px-4 bg-pink-400 text-white rounded-md"
@@ -260,6 +298,13 @@ const Test = () => {
         onClick={listLocations}
       >
         listLocations
+      </button>
+
+      <button
+        className="py-2 px-4 bg-purple-400 text-white rounded-md"
+        onClick={getSharedFileInfo}
+      >
+        getSharedFileInfo
       </button>
 
       <div className="h-24 border overflow-y-scroll scrollbar-hide">

@@ -12,15 +12,52 @@ const RecentFiles = () => {
   const { darkMode } = useDarkMode();
   const [files, setFiles] = useState([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [selectedFileName, setSelectedFileName] = useState("");
-  const [selectedFileSize, setSelectedFileSize] = useState("");
+  const [selectedFileInfo, setSelectedFileInfo] = useState({
+    name: "",
+    size: "",
+    id: "",
+    owner: "",
+    profileUrl: "",
+    lastUpdate: "",
+  });
   const [loading, setLoading] = useState(true);
-  const [selectedFileId, setSelectedFileId] = useState("");
+  const [sharedFileInfo, setSharedFileInfo] = useState({});
 
-  const openDrawer = (fileName, fileSize, fileId) => {
-    setSelectedFileName(fileName);
-    setSelectedFileSize(fileSize);
-    setSelectedFileId(fileId);
+  const getSharedFileInfo = async (fileId) => {
+    try {
+      let token = JSON.parse(sessionStorage.getItem("token"));
+      const info = await axios.get(
+        `https://twokeybackend.onrender.com/file/sharedFileInfo/${fileId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.session.access_token}`,
+          },
+        }
+      );
+      setSharedFileInfo(info.data);
+      // console.log("getSharedFileInfo :", info.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const openDrawer = (
+    fileName,
+    fileSize,
+    fileId,
+    owner,
+    publicUrl,
+    lastUpdate
+  ) => {
+    getSharedFileInfo(fileId);
+    setSelectedFileInfo({
+      name: fileName,
+      size: fileSize,
+      id: fileId,
+      owner: owner,
+      ownerProfileUrl: publicUrl,
+      lastUpdate: lastUpdate,
+    });
     setIsDrawerOpen(true);
   };
 
@@ -93,7 +130,16 @@ const RecentFiles = () => {
               <div
                 key={index}
                 className="border border-gray-200 p-2 rounded-lg shadow-md cursor-pointer"
-                onClick={() => openDrawer(file.name, file.size, file.id)}
+                onClick={() =>
+                  openDrawer(
+                    file.name,
+                    file.size,
+                    file.id,
+                    file.owner,
+                    file.publicUrl,
+                    file.lastUpdate
+                  )
+                }
               >
                 <img
                   src={PDFPreview}
@@ -124,9 +170,8 @@ const RecentFiles = () => {
       <FileDrawer
         isDrawerOpen={isDrawerOpen}
         closeDrawer={closeDrawer}
-        selectedFileName={selectedFileName}
-        selectedFileSize={selectedFileSize}
-        selectedFileId={selectedFileId}
+        selectedFileInfo={selectedFileInfo}
+        sharedFileInfo={sharedFileInfo}
       />
     </div>
   );

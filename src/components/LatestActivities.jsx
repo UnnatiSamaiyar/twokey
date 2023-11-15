@@ -1,36 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import Checkmark from "../assets/checkmark.svg";
-
-let departments = [
-  { name: "Account", path: "/account" },
-  { name: "Finance", path: "/finance" },
-  { name: "Development", path: "/development" },
-  { name: "Manufacturing", path: "/manufacturing" },
-  { name: "Sales", path: "/sales" },
-  { name: "Human Resources", path: "/humanresources" },
-  { name: "Account", path: "/account" },
-  { name: "Finance", path: "/finance" },
-  { name: "Development", path: "/development" },
-  { name: "Manufacturing", path: "/manufacturing" },
-  { name: "Sales", path: "/sales" },
-  { name: "Human Resources", path: "/humanresources" },
-  { name: "Account", path: "/account" },
-  { name: "Finance", path: "/finance" },
-  { name: "Development", path: "/development" },
-  { name: "Manufacturing", path: "/manufacturing" },
-  { name: "Sales", path: "/sales" },
-  { name: "Human Resources", path: "/humanresources" },
-  { name: "Account", path: "/account" },
-  { name: "Finance", path: "/finance" },
-  { name: "Development", path: "/development" },
-  { name: "Manufacturing", path: "/manufacturing" },
-  { name: "Sales", path: "/sales" },
-  { name: "Human Resources", path: "/humanresources" },
-];
+import axios from "axios";
+import Avatar from "@mui/material/Avatar";
+import Tooltip from "@mui/material/Tooltip";
 
 const LatestActivities = () => {
   const [selectedValue, setSelectedValue] = useState("");
+  const [logs, setLogs] = useState([]);
+
+  useEffect(() => {
+    const getCommonLogs = async () => {
+      try {
+        let token = JSON.parse(sessionStorage.getItem("token"));
+        const commonLogs = await axios.get(
+          "https://twokeybackend.onrender.com/file/getLogs/access",
+          {
+            headers: {
+              Authorization: `Bearer ${token.session.access_token}`,
+            },
+          }
+        );
+        console.log("commonLogs :", commonLogs.data);
+        setLogs(commonLogs.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getCommonLogs();
+  }, []);
+
+  const formatTimestamp = (timestamp) => {
+    const options = {
+      timeZone: "Asia/Kolkata", // Indian Standard Time (IST)
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+    };
+
+    return new Date(timestamp).toLocaleString("en-IN", options);
+  };
 
   const handleSelectChange = (event) => {
     const value = event.target.value;
@@ -61,11 +74,30 @@ const LatestActivities = () => {
         </div>
 
         <div className="h-56 overflow-y-scroll scrollbar-hide">
-          {departments.map((dep, index) => (
-            <p key={index} className="p-2 border-b">
-              {dep.name}
-            </p>
-          ))}
+          {logs &&
+            logs?.map((log, index) => (
+              <div key={index} className="border-b">
+                <span className="flex flex-row gap-2 p-2">
+                  <Tooltip title={log.user} arrow>
+                    <Avatar
+                      src={log.profile_pic}
+                      alt="owner pic"
+                      sx={{ width: 25, height: 25 }}
+                    />
+                  </Tooltip>
+                  <span>
+                    <p className="text-sm">
+                      <span className="font-semibold">{log.username}</span>{" "}
+                      accessed
+                      <span className="font-semibold"> {log.file}</span> file.
+                    </p>
+                    <p className="text-sm text-gray-400 mt-2">
+                      {formatTimestamp(log.timestamp)}
+                    </p>
+                  </span>
+                </span>
+              </div>
+            ))}
         </div>
       </Paper>
     </div>
