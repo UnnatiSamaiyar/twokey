@@ -280,16 +280,6 @@ export const AuthProvider = ({ children }) => {
         }
       );
 
-      // locations.data.features.map((items) =>
-      //   console.log(
-      //     "id:",
-      //     items.id,
-      //     "location:",
-      //     items.geometry.coordinates[0],
-      //     items.geometry.coordinates[1]
-      //   )
-      // );
-
       // console.log("locations :", locations.data.features);
       setCoordinates(locations.data.features);
     } catch (error) {

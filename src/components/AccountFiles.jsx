@@ -16,6 +16,12 @@ import Tooltip from "@mui/material/Tooltip";
 import axios from "axios";
 import { supabase } from "../helper/supabaseClient";
 import { useLocation } from "react-router-dom";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import StepIcon from "@mui/material/StepIcon";
+import CheckIcon from "@mui/icons-material/Check";
+import ReadIcon from "../assets/read.svg";
 
 const AccountFiles = () => {
   const location = useLocation();
@@ -114,7 +120,10 @@ function Row(props) {
   return (
     <React.Fragment>
       <TableRow
-        sx={{ "& > *": { borderBottom: "unset" }, cursor: "pointer" }}
+        sx={{
+          "& > *": { borderBottom: "unset" },
+          cursor: "pointer",
+        }}
         onClick={handleRowClick}
       >
         <TableCell>
@@ -133,7 +142,7 @@ function Row(props) {
         <TableCell align="center">
           <Tooltip title={row.owner}>
             <img
-              src={row.publicUrl} // Assuming publicUrl is the URL for the owner's image
+              src={row.publicUrl}
               alt="Owner"
               style={{ width: "30px", height: "30px", borderRadius: "10%" }}
             />
@@ -162,25 +171,40 @@ function Row(props) {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
+              <Stepper activeStep={Logs.length - 1} orientation="vertical">
                 {Logs.length > 0 ? (
                   Logs.map((log, index) => (
-                    <div key={index}>
-                      <p className="text-sm">
-                        <strong>{log.username}</strong> Accessed the file{" "}
-                        <span className="text-gray-600">
-                          on {formatTimestamp(log.timestamp)}
-                        </span>
-                      </p>
-                    </div>
+                    <Step key={index}>
+                      <StepLabel
+                        icon={
+                          <img
+                            src={ReadIcon}
+                            alt="read"
+                            className="bg-indigo-300 rounded-full p-0.5"
+                          />
+                        }
+                      >
+                        <div>
+                          <p className="text-sm tracking-wide space-x-1">
+                            <strong>{log.username}</strong>{" "}
+                            <span className="text-gray-600">read</span>{" "}
+                            <span className="text-indigo-500 ">file</span>
+                            <span className="text-gray-400">
+                              on {formatTimestamp(log.timestamp)}
+                            </span>
+                          </p>
+                        </div>
+                      </StepLabel>
+                    </Step>
                   ))
                 ) : (
-                  <p className="text-center">No logs found!</p>
+                  <Step key={0}>
+                    <StepLabel icon={<p>.</p>}>
+                      <p className="text-center">No logs found!</p>
+                    </StepLabel>
+                  </Step>
                 )}
-              </Typography>
-              <Typography variant="body2" gutterBottom component="div">
-                {/* Display additional details if needed */}
-              </Typography>
+              </Stepper>
             </Box>
           </Collapse>
         </TableCell>

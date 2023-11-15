@@ -110,7 +110,7 @@ const ProfilePersonalInfo = ({ profileData }) => {
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
-              className={`text-md  placeholder-gray-500 p-2 rounded-md ${
+              className={`text-md lining-nums placeholder-gray-500 p-2 rounded-md ${
                 isEditing ? "bg-white shadow-lg border" : "bg-inherit"
               }`}
               placeholder="9876543210"
