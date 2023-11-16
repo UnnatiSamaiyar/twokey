@@ -4,8 +4,10 @@ import Checkmark from "../assets/checkmark.svg";
 import axios from "axios";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
+import { useDarkMode } from "../context/darkModeContext";
 
 const LatestActivities = () => {
+  const { darkMode } = useDarkMode();
   const [selectedValue, setSelectedValue] = useState("");
   const [logs, setLogs] = useState([]);
 
@@ -21,7 +23,7 @@ const LatestActivities = () => {
             },
           }
         );
-        console.log("commonLogs :", commonLogs.data);
+        // console.log("commonLogs :", commonLogs.data);
         setLogs(commonLogs.data);
       } catch (error) {
         console.log(error);
@@ -54,7 +56,11 @@ const LatestActivities = () => {
   return (
     <div className="w-2/5">
       <Paper className="h-72 ">
-        <div className="flex justify-between items-center p-4">
+        <div
+          className={`flex justify-between items-center p-4 ${
+            darkMode ? "bg-gray-600 text-gray-200" : " "
+          }`}
+        >
           <span className="flex flex-row items-center gap-1">
             <p className="text-sm font-semibold">Latest Activities</p>
             <select
@@ -67,7 +73,7 @@ const LatestActivities = () => {
               <option value="Access">Access</option>
             </select>
           </span>
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-1 cursor-pointer">
             <p className="text-xs text-gray-500">Mark all as read</p>
             <img src={Checkmark} alt="✔" className="text-sm" />
           </span>

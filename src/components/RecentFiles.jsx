@@ -83,29 +83,30 @@ const RecentFiles = () => {
     fetchRecentFiles();
   }, []);
 
-  useEffect(() => {
-    async function recent() {
-      const { data, error } = await supabase.storage.from("TwoKey").list();
-    }
-    recent();
-  }, []);
-
   return (
     <div>
-      <div className="flex flex-row justify-between items-center ">
-        <p className="text-lg font-semibold my-4">Recent Files</p>
+      <div
+        className={`flex flex-row justify-between items-center ${
+          darkMode && "text-gray-200"
+        }`}
+      >
+        <p className="text-lg font-semibold my-4 ">Recent Files</p>
         <span className="flex gap-2">
           <button
-            className={`py-1 px-4 rounded-md ${
-              darkMode ? "bg-gray-600" : "bg-gray-50"
-            } border`}
+            className={`py-1 px-4 rounded-md border ${
+              darkMode ? "bg-gray-600 border-gray-500" : "bg-gray-50"
+            } `}
           >
             + Share
           </button>
           <QuickShare />
         </span>
       </div>
-      <div className="grid grid-cols-5 gap-4 bg-inherit text-gray-600">
+      <div
+        className={`grid grid-cols-5 gap-4 bg-inherit ${
+          darkMode ? "text-gray-200" : "text-gray-600"
+        }`}
+      >
         {loading
           ? Array.from({ length: 5 }).map((_, index) => (
               <div
@@ -129,7 +130,9 @@ const RecentFiles = () => {
           : files.map((file, index) => (
               <div
                 key={index}
-                className="border border-gray-200 p-2 rounded-lg shadow-md cursor-pointer"
+                className={`border border-gray-200 p-2 rounded-lg shadow-md cursor-pointer ${
+                  darkMode ? "border-gray-500" : "border-gray-200"
+                }`}
                 onClick={() =>
                   openDrawer(
                     file.name,
@@ -151,15 +154,14 @@ const RecentFiles = () => {
                   <span className="flex flex-row justify-between items-center">
                     <span>
                       <h6 className="text-sm font-semibold">File Info:</h6>
-                      <p className="text-xs text-gray-500 font-light">
-                        {file.size}
-                      </p>
+                      <p className="text-xs  font-light">{file.size}</p>
                     </span>
 
                     <Avatar
                       src={file.publicUrl}
                       alt="owner pic"
                       sx={{ width: 20, height: 20 }}
+                      className={`${darkMode && "border border-white "}`}
                     />
                   </span>
                 </span>

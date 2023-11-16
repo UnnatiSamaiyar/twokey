@@ -23,12 +23,6 @@ import ErrorPage from "./components/ErrorPage";
 const App = () => {
   const { token } = useAuth();
 
-  const hideGrid =
-    window.location.pathname === "/" ||
-    window.location.pathname === "/signup" ||
-    window.location.pathname === "/onboarding";
-  console.log("token", token);
-
   return (
     <Router>
       <div className="flex">

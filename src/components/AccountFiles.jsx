@@ -11,19 +11,18 @@ import IconButton from "@mui/material/IconButton";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Collapse from "@mui/material/Collapse";
-import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import axios from "axios";
-import { supabase } from "../helper/supabaseClient";
 import { useLocation } from "react-router-dom";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
-import StepIcon from "@mui/material/StepIcon";
-import CheckIcon from "@mui/icons-material/Check";
 import ReadIcon from "../assets/read.svg";
+import UnfoldIcon from "../assets/unfold.svg";
+import { useDarkMode } from "../context/darkModeContext";
 
 const AccountFiles = () => {
+  const { darkMode } = useDarkMode();
   const location = useLocation();
   const [filteredData, setFilteredData] = useState([]);
 
@@ -35,7 +34,7 @@ const AccountFiles = () => {
   }, []);
 
   return (
-    <div className="text-center">
+    <div className={`${darkMode ? "bg-gray-800 text-white" : "text-gray-800"}`}>
       <p className="text-lg text-left font-semibold my-6">Account Files</p>
       <Box sx={{ width: "100%" }}>
         <TableContainer component={Paper}>
@@ -43,7 +42,11 @@ const AccountFiles = () => {
             <TableHead>
               <TableRow sx={{ backgroundColor: "#F7F9FCCC" }}>
                 <TableCell />
-                <TableCell>FILE NAME</TableCell>
+                <TableCell>
+                  <p className="flex flex-row items-center">
+                    FILE NAME <img src={UnfoldIcon} alt="↓" />
+                  </p>
+                </TableCell>
                 <TableCell>OWNER</TableCell>
                 <TableCell align="center">
                   STATUS
@@ -58,7 +61,11 @@ const AccountFiles = () => {
                     i
                   </b>
                 </TableCell>
-                <TableCell align="center">LAST UPDATED</TableCell>
+                <TableCell align="center">
+                  <p className="flex flex-row items-center">
+                    LAST UPDATED <img src={UnfoldIcon} alt="↓" />
+                  </p>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
