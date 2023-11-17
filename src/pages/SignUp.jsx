@@ -59,8 +59,6 @@ const SignUp = () => {
 
   useEffect(() => {
     const orgData = async () => {
-      // catching the errors if the api call fails
-      // set the error message to page error state to be used for displaying error page.
       try {
         const org = await axios.get(
           "https://twokeybackend.onrender.com/org/list_orgs"
