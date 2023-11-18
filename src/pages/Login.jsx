@@ -82,10 +82,7 @@ const Login = () => {
 
     orgData();
   }, []);
-  /**
-   * comment this out on dev mode
-   * as the api call fails from localhost
-   */
+  
   // if (pageErr) {
   //   return <ErrorPage error={pageErr} />;
   // }

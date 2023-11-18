@@ -152,7 +152,6 @@ const SignUp = () => {
                 Email
               </InputLabel>
               <span id="email" className="flex flex-row gap-2">
-                {/* <h3 className="text-lg text-left mb-2 mt-4">Email</h3> */}
 
                 <TextField
                   id="outlined-basic-email"
